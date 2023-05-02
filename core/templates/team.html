@@ -1,0 +1,113 @@
+
+{% extends 'base.html' %}
+
+
+{% block body %}
+
+{% if user.is_authenticated %}
+
+
+<header>
+
+    <a href="/">Home</a>
+    <a href="{% url 'teams' %}">Teams</a>
+</header>
+
+{% if form %}
+    <form method="post">
+        {% csrf_token %}
+        
+        {% for field in form %}
+    
+        
+        <div class="fieldWrapper">
+            {{ field.errors }}
+            {{ field.label_tag }} {{ field }}
+        </div>
+        {% if field.name == "organization" %}
+        <a href="{% url 'organization' %}"> Click here to create new organization </a>
+        {% endif %}
+
+        {% endfor %}
+
+        <div class="mt-3 mb-5">
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </div>
+    </form>
+{% else %}
+
+
+<section> 
+<p> Name: <strong> {{ team.name }} </strong>  </p>
+<p> Organization:  <strong>  {{ team.organization }} </strong>  </p>
+<p> Is onsite:  <strong>  {{ team.is_onsite }} </strong>  </p>
+<p> Is school team:  <strong>  {{ team.is_school_team }} </strong>  </p>
+<p> Is women team:  <strong>  {{ team.is_women_team }} </strong>  </p>
+
+
+    <table>
+        <thead>
+          <tr>
+            <th>Full Name</th>
+            <th>T-shirt size</th>
+          </tr>
+        </thead>
+        <tbody>
+
+    {% for members in team.members.all %}
+
+    <tr>
+        <td>{{ members.full_name }}</td>
+        <td>{{ members.tshirt_size }}</td>
+    </tr>
+
+    {% endfor %}
+    </tbody>
+    </table>
+
+
+</section>
+
+{%if participant_form %} 
+
+
+
+<section>
+    <h3>Add members:</h3>
+    <form  action="{% url 'participant' %}" method="post">
+        {% csrf_token %}
+        
+        {% for field in participant_form %}
+
+        
+        <div class="fieldWrapper">
+            {{ field.errors }}
+            {{ field.label_tag }} {{ field }}
+        </div>
+        {% endfor %}
+
+        <div class="mt-3 mb-5">
+            <button type="submit" class="btn btn-primary">Add participant</button>
+        </div>
+</form>
+
+</section>
+{% endif %}
+{% endif %}
+
+
+<footer>
+<a href="{% url 'logout' %}" class="button">Logout</a>
+</footer>
+{% else %}
+
+<header>
+   <p>To continue, please log in with your Telegram account using the button below:</p>
+   
+   <script async src="https://telegram.org/js/telegram-widget.js?22" data-telegram-login="{{TELEGRAM_BOT_NAME}}" data-size="large" data-auth-url="{{TELEGRAM_AUTH_PATH}}" data-request-access="write"></script>
+</header>
+
+
+
+{% endif %}
+{% endblock %}

@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+
+{% block body %}
+
+	<header>
+		<header>
+
+            <a href="/">Home</a>
+            <a href="{% url 'team' %}">Register</a>
+        </header>
+
+	</header>
+
+    <section>
+        
+        <table>
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Team</th>
+                <th>Organization</th>
+                <th>Members</th>
+                <th>Is onsite?</th>
+                <th>Is school team?</th>
+                <th>Is women team?</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+    
+        {% for team in teams %}
+    
+            <tr>
+                <td>{{ forloop.counter }}</td>
+                <td>{{ team.name }}</td>
+                <td>{{ team.organization }}</td>
+                <td>{{ team.members.all|join:", "  }} </td>
+                <td>{{ team.is_onsite }}</td>
+                <td>{{ team.is_school_team }}</td>
+                <td>{{ team.is_women_team }}</td>
+                <td>{{ team.status }}</td>
+            </tr>
+        
+        {% endfor %}
+        </tbody>
+        </table>
+
+    </section>
+   
+
+    
+    {% endblock %}

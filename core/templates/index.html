@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+
+{% block body %}
+
+	<header>
+		<h1>KBTU Open Spring 2023</h1>
+		<p>Regular ICPC-style programming contest organized by Kazakh-British Technical University</p>
+		<p>Join us on May 14, 2023</p>
+		<a href="{% url 'team' %}" class="button">Register</a>
+
+		<a href="{% url 'teams' %}" class="button">Teams</a>
+	</header>
+
+    <section>
+        <h2>Schedule</h2>
+        <ul>
+            <li>10:00-11:30: Sending login/passwords, seating arrangement</li>
+            <li>12:00-17:00: Contest time</li>
+            <li>18:00-19:00: Closing ceremony</li>
+        </ul>
+    </section>
+    
+    <section>
+        <h2>Prizes</h2>
+        <p>Only onsite participants are eligible for prizes.</p>
+        <ul>
+            <li>1st place: TBD</li>
+            <li>2nd place: TBD</li>
+            <li>3rd place: TBD</li>
+        </ul>
+        <h3>Additional prizes:</h3>
+        <ul>
+            <li>Best women team</li>
+            <li>Best school team</li>
+        </ul>
+    </section>
+    
+    <section>
+        <h2>Sponsors</h2>
+        <ul>
+            <li>Kazakh-British Technical University</li>
+        </ul>
+    </section>
+    
+    <section>
+            <h2>FAQ</h2>
+            <ol>
+                <li>
+                    <h3>Where is the event taking place?</h3>
+                    <p>The event is taking place at Kazakh-British Technical University, located at Tole-bi street 59, Almaty. The entrance is from Abylaykhan street side.</p>
+                </li>
+                <li>
+                    <h3>What is the ICPC?</h3>
+                    <p>The International Collegiate Programming Contest (ICPC) is an annual multi-tiered competitive programming competition among the universities of the world.</p>
+                </li>
+                <li>
+                    <h3>Who are eligible to participate?</h3>
+                    <p>The entire competition will be held both onsite and online, and everyone is welcome to participate!</p>
+                </li>
+                <li>
+                    <h3>How many people should be in a team?</h3>
+                    <p>Teams should be formed out of a maximum of three people.</p>
+                </li>
+                <li>
+                    <h3>What kind of problems will we solve?</h3>
+                    <p>The problems that will be solved during the competition are similar to those found on Codeforces. To get an idea, have a look at this: <a href="https://codeforces.com/problemset/problem/4/A">https://codeforces.com/problemset/problem/4/A</a></p>
+                </li>
+                <li>
+                    <h3>Who have prepared the problems?</h3>
+                    <p>All the problems have been prepared by KBTU students and alumni.</p>
+                </li>
+                <li>
+                    <h3>Who have prepared the problems?</h3>
+                    <p>All the problems have been prepared by KBTU students and alumni.</p>
+                </li>
+            </ol>
+        </section>
+    
+    {% endblock %}
