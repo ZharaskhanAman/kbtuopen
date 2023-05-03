@@ -16,8 +16,6 @@ RUN set -ex && \
     rm -rf /root/.cache/
 COPY . /code
 
-RUN python manage.py collectstatic --noinput
-
 EXPOSE 8000
 
-CMD ["gunicorn", "--bind", ":8000", "--workers", "2", "kbtuopen.wsgi"]
+CMD ["/bin/bash", "-c", "python manage.py collectstatic --noinput; gunicorn --bind :8000 --workers 2 kbtuopen.wsgi"]
