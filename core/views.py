@@ -78,7 +78,7 @@ def participant_view(request):
 
 
 def teams_view(request):
-    return render(request, 'teams.html', {'teams': Team.objects.annotate(num_members=Count('members')).filter(num_members__gt=0)})
+    return render(request, 'teams.html', {'teams': Team.objects.annotate(num_members=Count('members')).filter(num_members__gt=0).order_by("id")})
     
 def organization_view(request): 
     if request.method == 'POST':
