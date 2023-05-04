@@ -18,4 +18,4 @@ COPY . /code
 
 EXPOSE 8000
 
-CMD ["/bin/bash", "-c", "python manage.py collectstatic --noinput; gunicorn --bind :8000 --workers 2 kbtuopen.wsgi"]
+CMD ["/bin/bash", "-c", "python manage.py collectstatic --noinput; python manage.py migrate; gunicorn --bind :8000 --workers 2 kbtuopen.wsgi"]
