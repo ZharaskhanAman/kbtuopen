@@ -14,6 +14,8 @@ class ParticipantForm(forms.ModelForm):
 
 
 class TeamForm(forms.ModelForm):
+    name = forms.CharField(label="Team name")
+
     class Meta:
         model = Team
         fields = ('name', 'organization', 'is_onsite', 'is_school_team', 'is_women_team',)

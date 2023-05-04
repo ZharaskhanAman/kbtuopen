@@ -25,7 +25,7 @@
             {{ field.label_tag }} {{ field }}
         </div>
         {% if field.name == "organization" %}
-        <a href="{% url 'organization' %}"> Click here to create new organization </a>
+        <a href="{% url 'organization' %}"> Click here to create a new organization </a>
         {% endif %}
 
         {% endfor %}
@@ -38,7 +38,7 @@
 
 
 <section> 
-<p> Name: <strong> {{ team.name }} </strong>  </p>
+<p> Team Name: <strong> {{ team.name }} </strong>  </p>
 <p> Organization:  <strong>  {{ team.organization }} </strong>  </p>
 <p> Is onsite:  <strong>  {{ team.is_onsite }} </strong>  </p>
 <p> Is school team:  <strong>  {{ team.is_school_team }} </strong>  </p>

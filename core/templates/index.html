@@ -1,5 +1,7 @@
 {% extends "base.html" %}
 
+{% load static %}
+
 {% block body %}
 
 	<header>
@@ -24,9 +26,10 @@
         <h2>Prizes</h2>
         <p>Only onsite participants are eligible for prizes.</p>
         <ul>
-            <li>1st place: TBD</li>
-            <li>2nd place: TBD</li>
-            <li>3rd place: TBD</li>
+            <li>1st place: <strong>180 000 KZT </strong></li>
+            <li>2nd place: <strong>120 000 KZT </strong></li>
+            <li>3rd place: <strong>60 000 KZT </strong></li>
+            <li>1-10 place: <strong> 30 T-shirts </strong> in honor of the <strong>30th</strong> KBTU Open </li>
         </ul>
         <h3>Additional prizes:</h3>
         <ul>
@@ -37,11 +40,20 @@
     
     <section>
         <h2>Sponsors</h2>
-        <ul>
-            <li>Kazakh-British Technical University</li>
-        </ul>
+        <figure>
+            <p> <a href="https://zapis.kz" target="_blank"> <img alt="zapis.kz" src="{% static 'zapis.webp' %}" height="100" width="300"/> </a> </p>
+            <p> <a href="https://umag.kz" target="_blank"> <img alt="umag.kz" src="{% static 'umag.png' %}" height="100" width="300"/> </a> </p>
+            <p> <a href="https://huawei.com" target="_blank"> <img alt="huawei.com" src="{% static 'huawei.svg' %}" height="100" width="300"/> </a> </p>
+            <p> <a href="https://kbtu.edu.kz" target="_blank"> <img alt="kbtu.edu.kz" src="{% static 'kbtu.jpg' %}" height="100" width="300"/> </a> </p>
+        </figure>
     </section>
     
+    <section>
+        <h2> Follow us</h2>
+        
+        <script async src="https://telegram.org/js/telegram-widget.js?22" data-telegram-post="kbtuopen/128" data-width="100%" data-userpic="false"></script>
+        
+    </section>
     <section>
             <h2>FAQ</h2>
             <ol>
