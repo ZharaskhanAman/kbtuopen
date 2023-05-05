@@ -34,7 +34,7 @@ TELEGRAM_BOT_TOKEN=env.str("TELEGRAM_BOT_TOKEN")
 
 ALLOWED_HOSTS = ["127.0.0.1", "localhost", "kbtuopen.fly.dev", "kbtuopen.com",]
 
-CSRF_TRUSTED_ORIGINS = ["https://kbtuopen.fly.dev", "https://kbtuopen.com",]
+CSRF_TRUSTED_ORIGINS = ["https://kbtuopen.fly.dev", "https://kbtuopen.com", "https://*.github.dev"]
 
 # Application definition
 
