@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 
 from pathlib import Path
 from environs import Env 
+import os
 
 env = Env()  
 env.read_env()  
@@ -34,7 +35,12 @@ TELEGRAM_BOT_TOKEN=env.str("TELEGRAM_BOT_TOKEN")
 
 ALLOWED_HOSTS = ["127.0.0.1", "localhost", "kbtuopen.fly.dev", "kbtuopen.com",]
 
-CSRF_TRUSTED_ORIGINS = ["https://kbtuopen.fly.dev", "https://kbtuopen.com", "https://*.github.dev"]
+CSRF_TRUSTED_ORIGINS = ["https://kbtuopen.fly.dev", "https://kbtuopen.com"]
+
+if 'CODESPACE_NAME' in os.environ:
+    codespace_name = os.getenv("CODESPACE_NAME")
+    codespace_domain = os.getenv("GITHUB_CODESPACES_PORT_FORWARDING_DOMAIN")
+    CSRF_TRUSTED_ORIGINS += [f"https://{codespace_name}-*.{codespace_domain}"]
 
 # Application definition
 

@@ -2,6 +2,7 @@ from django.conf import settings
 from django.urls import reverse
 from urllib import request, parse
 from kbtuopen.settings import TELEGRAM_BOT_TOKEN
+import os
 
 telegram_link = f"https://api.telegram.org/bot{TELEGRAM_BOT_TOKEN}"
 
@@ -35,9 +36,23 @@ def send_message(chat_id, login, password):
 
     return (status, response)
 
+def get_port(request):
+    if 'SERVER_PORT' in request.META:
+        return request.META['SERVER_PORT']
+    else:
+        return None
+
+def telegram_auth_path(request):
+    url = request.build_absolute_uri(reverse('login'))
+    if 'CODESPACE_NAME' in os.environ:
+        codespace_name = os.getenv("CODESPACE_NAME")
+        codespace_domain = os.getenv("GITHUB_CODESPACES_PORT_FORWARDING_DOMAIN")
+        url = f"https://{codespace_name}-{get_port(request)}.{codespace_domain}{reverse('login')}"
+    return url
+
 
 def telegram_context_processor(request):
     return {
         "TELEGRAM_BOT_NAME": settings.TELEGRAM_BOT_NAME,
-        "TELEGRAM_AUTH_PATH": request.build_absolute_uri(reverse('login'))
+        "TELEGRAM_AUTH_PATH": telegram_auth_path(request),
     }
