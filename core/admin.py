@@ -10,7 +10,7 @@ def send_creds(modeladmin, request, queryset):
 
 
 def export_as_codeforces_format(modeladmin, request, queryset):
-    response = HttpResponse(content_type="text/plain")
+    response = HttpResponse(content_type="text/plain;charset=utf-8")
 
     text = ""
     for team in queryset:
