@@ -29,6 +29,8 @@ SECRET_KEY = env.str("SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = env.bool("DEBUG", default=False)
 
+IS_REGISTRATION_OPEN = env.bool("IS_REGISTRATION_OPEN", default=True)
+
 TELEGRAM_BOT_NAME=env.str("TELEGRAM_BOT_NAME")
 TELEGRAM_BOT_TOKEN=env.str("TELEGRAM_BOT_TOKEN")
 

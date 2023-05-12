@@ -122,8 +122,5 @@ def team_view(request):
             else:
                 form = TeamForm()
 
-                
-
-    
-    
-    return render(request, 'team.html', {'form': form, 'user': request.user, 'team': team, 'participant_form': participant_form})
+             
+    return render(request, 'team.html', {'form': form, 'user': request.user, 'team': team, 'participant_form': participant_form, 'is_reg_open': settings.IS_REGISTRATION_OPEN})

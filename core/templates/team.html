@@ -13,7 +13,13 @@
     <a href="{% url 'teams' %}">Teams</a>
 </header>
 
+{% if is_reg_open == False %} 
+<p> Registration closed </p>
+
+{% endif %}
+
 {% if form %}
+   {% if is_reg_open %}
     <form method="post">
         {% csrf_token %}
         
@@ -34,6 +40,7 @@
             <button type="submit" class="btn btn-primary">Submit</button>
         </div>
     </form>
+    {% endif %}
 {% else %}
 
 
@@ -44,7 +51,17 @@
 <p> Is school team:  <strong>  {{ team.is_school_team }} </strong>  </p>
 <p> Is women team:  <strong>  {{ team.is_women_team }} </strong>  </p>
 
+{% if team.status == 'accepted' %}
+<section> 
 
+<p> Login:  <strong>  {{ team.login }} </strong>  </p>
+<p> Password:  <strong>  {{ team.password }} </strong>  </p>
+
+
+<a href="https://contest.kbtuopen.com" class="button">Contest link</a>
+</section> 
+
+{% endif %}
     <table>
         <thead>
           <tr>
@@ -68,7 +85,7 @@
 
 </section>
 
-{%if participant_form %} 
+{%if participant_form and is_reg_open %} 
 
 
 

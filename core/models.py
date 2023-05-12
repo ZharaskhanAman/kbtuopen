@@ -50,6 +50,13 @@ class Team(models.Model):
     def login(self):
         return f"team_{self.id}"
     
+    def generate_cf_format(self):
+        members  = ','.join(str(member) for member in self.members.all())
+
+        team_name = f"{self.organization}: {self.name} - {members}"
+
+        return f"CONTEST_ID| {self.login} | {self.password} | {team_name}"
+    
     def send_credentials_by_telegram(self):
         (status, response) = send_message(self.owner.username, self.login, self.password)
 
