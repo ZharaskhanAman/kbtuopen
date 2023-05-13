@@ -41,7 +41,8 @@ class Team(models.Model):
     is_women_team = models.BooleanField()
     status = models.CharField(choices=STATUS, max_length=20, default='pending')
     password = models.CharField(max_length=10, default=generate_random_pass)
-    password_sent_at = models.DateTimeField(null=True)
+    password_sent_at = models.DateTimeField(null=True, blank=True)
+    seat = models.CharField(max_length=100, blank=True, null=True)
 
     def __str__(self):
         return self.name
@@ -58,7 +59,7 @@ class Team(models.Model):
         return f"CONTEST_ID| {self.login} | {self.password} | {team_name}"
     
     def send_credentials_by_telegram(self):
-        (status, response) = send_message(self.owner.username, self.login, self.password)
+        (status, response) = send_message(self.owner.username, self.login, self.password, self.seat)
 
         if 200 <= status < 300:
             self.password_sent_at = timezone.now()

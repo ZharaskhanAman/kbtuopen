@@ -27,7 +27,7 @@ class OrganizationAdmin(admin.ModelAdmin):
 
 @admin.register(Team)
 class TeamAdmin(admin.ModelAdmin):
-    list_display = ('owner', 'name', 'organization', 'is_onsite', 'is_school_team', 'is_women_team', 'status', 'login', 'password', 'password_sent_at', 'member_count')
+    list_display = ('owner', 'name', 'organization', 'is_onsite', 'is_school_team', 'is_women_team', 'status', 'login', 'password', 'password_sent_at', 'seat', 'member_count')
 
     list_filter = [
         "status",

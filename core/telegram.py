@@ -13,12 +13,21 @@ Hi!
 Login: {login}
 Password: {password}
 
+{seat}
+
 Contest link: https://contest.kbtuopen.com
 """
 
 
-def send_message(chat_id, login, password):
-    text = message_invite.format(login=login, password=password)
+def send_message(chat_id, login, password, seat):
+    if seat:
+        seat = "Seating: " + seat
+    else:
+        seat = ""
+
+    text = message_invite.format(login=login, password=password, seat=seat)
+
+
 
     params = {
         'chat_id': chat_id,

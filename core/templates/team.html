@@ -58,6 +58,12 @@
 <p> Password:  <strong>  {{ team.password }} </strong>  </p>
 
 
+{% if team.is_onsite == True %}
+
+<p> Seating:  <strong>  {{ team.seat }} </strong>  </p>
+
+{% endif %}
+
 <a href="https://contest.kbtuopen.com" class="button">Contest link</a>
 </section> 
 
