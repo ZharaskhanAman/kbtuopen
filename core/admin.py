@@ -9,6 +9,13 @@ def send_creds(modeladmin, request, queryset):
         team.send_credentials_by_telegram()
 
 
+@admin.action(description="Enrolls users in esep.cpfed.kz")
+def enroll_teams_in_esep(modeladmin, request, queryset):
+
+    for team in queryset:
+        team.enroll_team_in_esep()
+
+
 def export_as_codeforces_format(modeladmin, request, queryset):
     response = HttpResponse(content_type="text/plain;charset=utf-8")
 
@@ -36,9 +43,10 @@ class TeamAdmin(admin.ModelAdmin):
         "is_onsite",
         "organization",
         "password_sent_at",
+        "is_synced_with_dmoj",
     ]
 
-    actions = [send_creds, export_as_codeforces_format]
+    actions = [send_creds, export_as_codeforces_format, enroll_teams_in_esep]
 
     @admin.display(description="Member count")
     def member_count(self, obj):
@@ -48,3 +56,6 @@ class TeamAdmin(admin.ModelAdmin):
 @admin.register(Participant)
 class ParticipantAdmin(admin.ModelAdmin):
     list_display = ('team', 'full_name', 'tshirt_size',)
+
+
+
