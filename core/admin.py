@@ -11,6 +11,7 @@ logger = logging.getLogger(__name__)
 def send_creds(modeladmin, request, queryset):
     for team in queryset:
         try:
+            logger.info("start sending creds for team {}".format(team.id))
             team.send_credentials_by_telegram()
         except Exception as e:
             logger.error("error occurred during sending creds to telegram %s", str(e))
