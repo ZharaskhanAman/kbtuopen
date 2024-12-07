@@ -77,10 +77,14 @@ def upload_csv(request):
             teams_to_update = []
             for row in reader:
                 try:
-                    team = Team.objects.get(name=row['Login'].split('-')[1])
+                    team = Team.objects.get(pk=int(row['Login'].split('-')[1]))
                     team.is_onsite = row['Is Onsite'].lower() in ['true', '1', 't']
-                    team.status = row['Status']
-                    team.seat = row['Seat']
+                    status = row.get('Status')
+                    if status is not None:
+                        team.status = status
+                    seat = row.get('Seat')
+                    if seat is not None:
+                        team.seat = seat
                     teams_to_update.append(team)
                 except Team.DoesNotExist:
                     logger.warning(
