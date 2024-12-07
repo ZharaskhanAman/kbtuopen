@@ -10,7 +10,7 @@ from .views import (
     teams_view,
 )
 
-from .admin_views import export_accepted_teams_on_site, export_accepted_teams_off_site
+from .admin_views import export_teams_on_site, export_teams_off_site
 
 urlpatterns = [
     path("", homePageView, name="home"),
@@ -24,6 +24,6 @@ urlpatterns = [
 ]
 
 urlpatterns += [
-    path("download-accepted-teams-onsite", export_accepted_teams_on_site, name='download-accepted-teams-onsite'),
-    path("download-accepted-teams-offsite", export_accepted_teams_off_site, name='download-accepted-teams-offsite'),
+    path("download-accepted-teams-onsite", export_teams_on_site, name='export-teams-onsite'),
+    path("download-accepted-teams-offsite", export_teams_off_site, name='export-teams-offsite'),
 ]
