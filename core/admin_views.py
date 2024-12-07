@@ -77,7 +77,7 @@ def upload_csv(request):
             teams_to_update = []
             for row in reader:
                 try:
-                    team = Team.objects.get(name=int(row['Login'].split('-')[1]))
+                    team = Team.objects.get(pk=int(row['Login'].split('-')[1]))
                     team.is_onsite = row['Is Onsite'].lower() in ['true', '1', 't']
                     status = row.get('Status')
                     if status is not None:
