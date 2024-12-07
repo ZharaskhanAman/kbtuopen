@@ -1,7 +1,7 @@
 import csv
 import logging
 
-from django.core.exceptions import PermissionDenied
+from django.core.exceptions import PermissionDenied, ValidationError
 from django.db.models import QuerySet
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
@@ -83,7 +83,11 @@ def upload_csv(request):
                     team.seat = row['Seat']
                     teams_to_update.append(team)
                 except Team.DoesNotExist:
-                    logger.warning("team with login %s does not exist", row['Login'])
+                    logger.warning(
+                        "team with login %s does not exist, splitted login is %s",
+                        row['Login'],
+                        row['Login'].split('-'),
+                    )
             Team.objects.bulk_update(teams_to_update, ['status', 'seat', 'is_onsite'])
 
             url = reverse('admin:core_team_changelist')
