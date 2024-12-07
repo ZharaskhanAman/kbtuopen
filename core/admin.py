@@ -2,18 +2,33 @@ from django.contrib import admin
 from core.models import Organization, Team, Participant
 from django.http import HttpResponse
 
+
 @admin.action(description="Send credentials by telegram")
 def send_creds(modeladmin, request, queryset):
-
     for team in queryset:
         team.send_credentials_by_telegram()
 
 
 @admin.action(description="Enrolls users in esep.cpfed.kz")
 def enroll_teams_in_esep(modeladmin, request, queryset):
-
     for team in queryset:
         team.enroll_team_in_esep()
+
+
+@admin.action(description="approve selected teams")
+def approve_teams(modeladmin, request, queryset):
+    for team in queryset:
+        team.status = "accepted"
+
+    Team.objects.bulk_update(queryset, ["status"])
+
+
+@admin.action(description="reject selected teams")
+def reject_teams(modeladmin, request, queryset):
+    for team in queryset:
+        team.status = "rejected"
+
+    Team.objects.bulk_update(queryset, ["status"])
 
 
 def export_as_codeforces_format(modeladmin, request, queryset):
@@ -21,7 +36,8 @@ def export_as_codeforces_format(modeladmin, request, queryset):
 
     text = ""
     for team in queryset:
-        text += team.generate_cf_format() + "\n"
+        if team.members.count() > 0:
+            text += team.generate_cf_format() + "\n"
 
     response.write(text)
     return response
@@ -56,6 +72,3 @@ class TeamAdmin(admin.ModelAdmin):
 @admin.register(Participant)
 class ParticipantAdmin(admin.ModelAdmin):
     list_display = ('team', 'full_name', 'tshirt_size',)
-
-
-
