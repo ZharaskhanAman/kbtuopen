@@ -4,9 +4,9 @@
 {% block object-tools-items %}
 {{ block.super }}
 <li>
-  <a href="{% url 'download-accepted-teams-onsite' %}" class="button">Скачать принятые on-site команды</a>
+  <a href="{% url 'export-teams-onsite' %}" class="button">Скачать принятые on-site команды</a>
 </li>
 <li>
-  <a href="{% url 'download-accepted-teams-offsite' %}" class="button">Скачать принятые off-site команды</a>
+  <a href="{% url 'export-teams-offsite' %}" class="button">Скачать принятые off-site команды</a>
 </li>
 {% endblock %}

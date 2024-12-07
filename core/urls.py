@@ -24,6 +24,6 @@ urlpatterns = [
 ]
 
 urlpatterns += [
-    path("download-accepted-teams-onsite", export_teams_on_site, name='export-teams-onsite'),
-    path("download-accepted-teams-offsite", export_teams_off_site, name='export-teams-offsite'),
+    path("export-teams-onsite", export_teams_on_site, name='export-teams-onsite'),
+    path("export-teams-offsite", export_teams_off_site, name='export-teams-offsite'),
 ]
