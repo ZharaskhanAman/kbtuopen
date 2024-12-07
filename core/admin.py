@@ -1,12 +1,19 @@
+import logging
+
 from django.contrib import admin
 from core.models import Organization, Team, Participant
 from django.http import HttpResponse
+
+logger = logging.getLogger(__name__)
 
 
 @admin.action(description="Send credentials by telegram")
 def send_creds(modeladmin, request, queryset):
     for team in queryset:
-        team.send_credentials_by_telegram()
+        try:
+            team.send_credentials_by_telegram()
+        except Exception as e:
+            logger.error("error occurred during sending creds to telegram %s", str(e))
 
 
 @admin.action(description="Enrolls users in esep.cpfed.kz")
