@@ -50,7 +50,20 @@ class OrganizationAdmin(admin.ModelAdmin):
 
 @admin.register(Team)
 class TeamAdmin(admin.ModelAdmin):
-    list_display = ('owner', 'name', 'organization', 'is_onsite', 'is_school_team', 'is_women_team', 'status', 'login', 'password', 'password_sent_at', 'seat', 'member_count')
+    list_display = (
+        'owner',
+        'name',
+        'organization',
+        'is_onsite',
+        'is_school_team',
+        'is_women_team',
+        'status',
+        'login',
+        'password',
+        'password_sent_at',
+        'seat',
+        'member_count',
+    )
 
     list_filter = [
         "status",
@@ -69,6 +82,8 @@ class TeamAdmin(admin.ModelAdmin):
         approve_teams,
         reject_teams,
     ]
+
+    change_list_template = "team_change_list.html"
 
     @admin.display(description="Member count")
     def member_count(self, obj):
