@@ -10,7 +10,7 @@ from .views import (
     teams_view,
 )
 
-from .admin_views import export_teams_on_site, export_teams_off_site
+from .admin_views import export_teams_on_site, export_teams_off_site, upload_csv
 
 urlpatterns = [
     path("", homePageView, name="home"),
@@ -26,4 +26,5 @@ urlpatterns = [
 urlpatterns += [
     path("export-teams-onsite", export_teams_on_site, name='export-teams-onsite'),
     path("export-teams-offsite", export_teams_off_site, name='export-teams-offsite'),
+    path("upload-csv", upload_csv, name='upload-csv'),
 ]
