@@ -60,9 +60,9 @@ class Team(models.Model):
         members = ",".join(str(member) for member in self.members.all())
         name = self.name
         if self.is_women_team:
-            name += " W"
+            name += "[W]"
         if self.is_school_team:
-            name += " S"
+            name += "[S]"
         team_name = f"{self.organization}: {name} - {members}"
 
         return f"CONTEST_ID| {self.login} | {self.password} | {team_name}"
