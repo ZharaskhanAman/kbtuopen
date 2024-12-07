@@ -73,7 +73,7 @@ def upload_csv(request):
         if form.is_valid():
             csv_file = request.FILES['csv_file']
             decoded_file = csv_file.read().decode('utf-8-sig').splitlines()
-            reader = csv.DictReader(decoded_file)
+            reader = csv.DictReader(decoded_file, delimiter=';')
             teams_to_update = []
             for row in reader:
                 try:
