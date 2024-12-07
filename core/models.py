@@ -4,7 +4,6 @@ from .telegram import send_message
 from django.utils import timezone
 import logging
 
-
 logger = logging.getLogger(__name__)
 
 
@@ -55,12 +54,16 @@ class Team(models.Model):
 
     @property
     def login(self):
-        return f"kbtufall23-{self.id}"
+        return f"kbtufall24-{self.id}"
 
     def generate_cf_format(self):
         members = ",".join(str(member) for member in self.members.all())
-
-        team_name = f"{self.organization}: {self.name} - {members}"
+        name = self.name
+        if self.is_women_team:
+            name += " W"
+        if self.is_school_team:
+            name += " S"
+        team_name = f"{self.organization}: {name} - {members}"
 
         return f"CONTEST_ID| {self.login} | {self.password} | {team_name}"
 
