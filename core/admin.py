@@ -62,7 +62,13 @@ class TeamAdmin(admin.ModelAdmin):
         "is_synced_with_dmoj",
     ]
 
-    actions = [send_creds, export_as_codeforces_format, enroll_teams_in_esep]
+    actions = [
+        send_creds,
+        export_as_codeforces_format,
+        enroll_teams_in_esep,
+        approve_teams,
+        reject_teams,
+    ]
 
     @admin.display(description="Member count")
     def member_count(self, obj):
