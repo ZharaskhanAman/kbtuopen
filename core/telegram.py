@@ -15,7 +15,7 @@ Password: {password}
 
 {seat}
 
-Contest link: https://contest.kbtuopen.com
+Contest link: https://kbtuopen.contest.codeforces.com/
 """
 
 
