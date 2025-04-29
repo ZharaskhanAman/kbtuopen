@@ -54,7 +54,7 @@ class Team(models.Model):
 
     @property
     def login(self):
-        return f"kbtufall24-{self.id}"
+        return f"kbtuspring25-{self.id}"
 
     def generate_cf_format(self):
         members = ",".join(str(member) for member in self.members.all())
