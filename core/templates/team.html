@@ -51,6 +51,11 @@
 <p> Is school team:  <strong>  {{ team.is_school_team }} </strong>  </p>
 <p> Is women team:  <strong>  {{ team.is_women_team }} </strong>  </p>
 
+<form action="{% url 'delete_team' %}" method="post" onsubmit="return confirm('Are you sure you want to delete your team?');">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-danger">Delete team</button>
+</form>
+
 {% if team.status == 'accepted' %}
 <section> 
 
@@ -87,8 +92,6 @@
     {% endfor %}
     </tbody>
     </table>
-
-
 </section>
 
 {%if participant_form and is_reg_open %} 

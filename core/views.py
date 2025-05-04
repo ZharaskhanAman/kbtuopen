@@ -8,6 +8,7 @@ import time
 from core.models import Team
 from core.forms import TeamForm, OrganizationForm, ParticipantForm
 from django.db.models import Count
+from django.core.exceptions import PermissionDenied
 
 def logoutView(request):
     logout(request)
@@ -124,3 +125,17 @@ def team_view(request):
 
              
     return render(request, 'team.html', {'form': form, 'user': request.user, 'team': team, 'participant_form': participant_form, 'is_reg_open': settings.IS_REGISTRATION_OPEN})
+
+
+def delete_team(request):
+    user = request.user
+    if not user or not user.is_authenticated:
+        raise PermissionDenied("User must be authenticated.")
+    
+    try:
+        team = user.team
+    except AttributeError:
+        raise PermissionDenied("User has no team.")
+    
+    team.delete()
+    return redirect('home')
