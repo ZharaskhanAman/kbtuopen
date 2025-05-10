@@ -41,6 +41,7 @@ def download_teams_csv(teams: QuerySet, filename):
             'Is Woman team',
             'Status',
             'Seat',
+            'Password'
             'Password sent at',
             'Members count',
             'Members',
@@ -57,6 +58,7 @@ def download_teams_csv(teams: QuerySet, filename):
                 team.is_women_team,
                 team.status,
                 team.seat,
+                team.password,
                 team.password_sent_at,
                 team.members.count(),
                 ",".join(str(member) for member in team.members.all()),
