@@ -41,7 +41,7 @@ def download_teams_csv(teams: QuerySet, filename):
             'Is Woman team',
             'Status',
             'Seat',
-            'Password'
+            'Password',
             'Password sent at',
             'Members count',
             'Members',
