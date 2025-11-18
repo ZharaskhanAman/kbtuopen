@@ -106,3 +106,16 @@ class Participant(models.Model):
 
     def __str__(self):
         return self.full_name
+
+
+class ContestSettings(models.Model):
+    is_registration_open = models.BooleanField(default=True)
+
+    def save(self, *args, **kwargs):
+        self.pk = 1
+        super().save(*args, **kwargs)
+
+    @classmethod
+    def load(cls):
+        obj, _ = cls.objects.get_or_create(pk=1)
+        return obj

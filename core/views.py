@@ -5,7 +5,7 @@ from kbtuopen import settings
 import hmac
 import hashlib
 import time
-from core.models import Team
+from core.models import Team, ContestSettings
 from core.forms import TeamForm, OrganizationForm, ParticipantForm
 from django.db.models import Count
 from django.core.exceptions import PermissionDenied
@@ -123,8 +123,8 @@ def team_view(request):
             else:
                 form = TeamForm()
 
-             
-    return render(request, 'team.html', {'form': form, 'user': request.user, 'team': team, 'participant_form': participant_form, 'is_reg_open': settings.IS_REGISTRATION_OPEN})
+    is_registration_open = ContestSettings.objects.get(id=1)         
+    return render(request, 'team.html', {'form': form, 'user': request.user, 'team': team, 'participant_form': participant_form, 'is_reg_open': is_registration_open})
 
 
 def delete_team(request):

@@ -1,7 +1,7 @@
 import logging
 
 from django.contrib import admin
-from core.models import Organization, Team, Participant
+from core.models import Organization, Team, Participant, ContestSettings
 from django.http import HttpResponse
 
 logger = logging.getLogger(__name__)
@@ -101,3 +101,12 @@ class TeamAdmin(admin.ModelAdmin):
 @admin.register(Participant)
 class ParticipantAdmin(admin.ModelAdmin):
     list_display = ('team', 'full_name', 'tshirt_size',)
+
+
+@admin.register(ContestSettings)
+class ContestSettingsAdmin(admin.ModelAdmin):
+    def has_add_permission(self, request):
+        return not ContestSettings.objects.exists()
+
+    def has_delete_permission(self, request, obj=None):
+        return False
