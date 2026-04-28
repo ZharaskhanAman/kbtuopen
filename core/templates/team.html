@@ -47,9 +47,9 @@
 <section> 
 <p> Team Name: <strong> {{ team.name }} </strong>  </p>
 <p> Organization:  <strong>  {{ team.organization }} </strong>  </p>
-<p> Is onsite:  <strong>  {{ team.is_onsite }} </strong>  </p>
-<p> Is school team:  <strong>  {{ team.is_school_team }} </strong>  </p>
-<p> Is women team:  <strong>  {{ team.is_women_team }} </strong>  </p>
+<p> Are you planing visit KBTU?:  <strong>  {{ team.is_onsite }} </strong>  </p>
+<p> Are you school team?:  <strong>  {{ team.is_school_team }} </strong>  </p>
+<p> Are you women team?:  <strong>  {{ team.is_women_team }} </strong>  </p>
 
 <form action="{% url 'delete_team' %}" method="post" onsubmit="return confirm('Are you sure you want to delete your team?');">
     {% csrf_token %}
