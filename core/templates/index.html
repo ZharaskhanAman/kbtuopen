@@ -1,98 +1,160 @@
 {% extends "base.html" %}
-
 {% load static %}
 
 {% block body %}
 
-	<header>
-		<h1>KBTU Open Spring 2026</h1>
-		<p>Regular ICPC-style programming contest organized by Kazakh-British Technical University</p>
-		<p>Join us on May 10, 2026</p>
-		<a href="{% url 'team' %}" class="button">Register</a>
+<div class="hero">
+  <div class="hero-badge">35th Edition</div>
+  <h1>KBTU Open Spring 2026</h1>
+  <p>Regular ICPC-style programming contest organized by Kazakh-British Technical University</p>
+  <p class="hero-date">📅 <span>May 10, 2026</span> &nbsp;·&nbsp; Almaty, Kazakhstan</p>
+  <div class="btn-row">
+    <a href="{% url 'team' %}" class="btn btn-primary">Register your team</a>
+    <a href="{% url 'teams' %}" class="btn btn-secondary">View teams</a>
+  </div>
+</div>
 
-		<a href="{% url 'teams' %}" class="button">Teams</a>
-	</header>
+<section id="schedule">
+  <h2>Schedule</h2>
+  <div class="timeline">
+    <div class="timeline-item">
+      <div class="timeline-time">10:30 – 11:30</div>
+      <div class="timeline-body">Login & passwords distribution, seating arrangement</div>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-time">12:00 – 17:00</div>
+      <div class="timeline-body">Contest</div>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-time">17:00 – 18:00</div>
+      <div class="timeline-body">Closing ceremony & prizes</div>
+    </div>
+  </div>
+</section>
 
-    <section>
-        <h2>Schedule</h2>
-        <ul>
-            <li>10:30-11:30: Sending login/passwords, seating arrangement</li>
-            <li>12:00-17:00: Contest time</li>
-            <li>17:00-18:00: Closing ceremony</li>
-        </ul>
-    </section>
-    
-    <section>
-        <h2>Prizes</h2>
-{#        <p>TBD</p>#}
-        
-        <p>Only onsite participants are eligible for prizes.</p>
-        <ul>
-            <li>1 place: <strong>300K KZT</strong></li>
-            <li>2 place: <strong>200K KZT</strong></li>
-            <li>3 place: <strong>100K KZT</strong></li>
-            <li>1-6 place: <strong>Hoodie </strong> in honor of the <strong>34-th</strong> KBTU Open </li>
-            <li>All places: Traditionally <strong>Doners</strong> from KBTU</li>
-        </ul>
-        <h3>Additional prizes:</h3>
-        <ul>
-            <li>Best women team</li>
-            <li>Best school team + <strong>100% KBTU GRANT!</strong></li>
-        </ul>
-        
+<section id="prizes">
+  <h2>Prizes</h2>
+  <p style="color:var(--muted);margin-bottom:20px;font-size:.9rem;">Only onsite participants are eligible for prizes.</p>
+  <div class="prize-grid">
+    <div class="prize-card gold">
+      <div class="prize-place">1st place</div>
+      <div class="prize-medal">🥇</div>
+      <div class="prize-amount">300K KZT</div>
+    </div>
+    <div class="prize-card silver">
+      <div class="prize-place">2nd place</div>
+      <div class="prize-medal">🥈</div>
+      <div class="prize-amount">200K KZT</div>
+    </div>
+    <div class="prize-card bronze">
+      <div class="prize-place">3rd place</div>
+      <div class="prize-medal">🥉</div>
+      <div class="prize-amount">100K KZT</div>
+    </div>
+  </div>
+  <div class="addl-section">
+    <p class="addl-title">Additional prizes</p>
+    <div class="addl-grid">
+      <div class="addl-card">
+        <div class="addl-icon">🧥</div>
+        <div class="addl-info">
+          <div class="addl-label">Places 1–6</div>
+          <div class="addl-value">Hoodie</div>
+          <div class="addl-sub">34th KBTU Open edition</div>
+        </div>
+      </div>
+      <div class="addl-card">
+        <div class="addl-icon">🥙</div>
+        <div class="addl-info">
+          <div class="addl-label">All teams</div>
+          <div class="addl-value">Doners</div>
+          <div class="addl-sub">Traditionally from KBTU</div>
+        </div>
+      </div>
+      <div class="addl-card addl-card--special">
+        <div class="addl-icon">🏆</div>
+        <div class="addl-info">
+          <div class="addl-label">Special award</div>
+          <div class="addl-value">Best women's team</div>
+          <div class="addl-sub">Separate category prize</div>
+        </div>
+      </div>
+      <div class="addl-card addl-card--special">
+        <div class="addl-icon">🎓</div>
+        <div class="addl-info">
+          <div class="addl-label">Special award</div>
+          <div class="addl-value">Best school team</div>
+          <div class="addl-sub">+ 100% KBTU Grant!</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
 
-{#        -->#}
-    </section>
-    
-    <section>
-        <h2>Sponsors</h2>
-        <figure>
-            <p> <a href="https://agilab.kz" target="_blank"> <img alt="agilab.kz" src="{% static 'agi.png' %}" height="100" width="300"/> </a> </p>
-{#            <p> <a href="https://zapis.kz" target="_blank"> <img alt="zapis.kz" src="{% static 'zapis.webp' %}" height="100" width="300"/> </a> </p>#}
-{#            <p> <a href="https://umag.kz" target="_blank"> <img alt="umag.kz" src="{% static 'umag.png' %}" height="100" width="300"/> </a> </p>#}
-            <!-- <p> <a href="https://huawei.com" target="_blank"> <img alt="huawei.com" src="{% static 'huawei.svg' %}" height="100" width="300"/> </a> </p> -->
-            <p> <a href="https://kbtu.edu.kz" target="_blank"> <img alt="kbtu.edu.kz" src="{% static 'kbtu.jpg' %}" height="100" width="300"/> </a> </p>
-        </figure>
-    </section>
-    
-    <section>
-        <h2> Follow us</h2>
-        
-        <script async src="https://telegram.org/js/telegram-widget.js?22" data-telegram-post="kbtuopen/307" data-width="100%" data-userpic="false"></script>
-        
-    </section>
-    <section>
-            <h2>FAQ</h2>
-            <ol>
-                <li>
-                    <h3>Where is the event taking place?</h3>
-                    <p>The event is taking place at Kazakh-British Technical University, located at Tole-bi street 59, Almaty. The entrance is from Abylaykhan street side.</p>
-                </li>
-                <li>
-                    <h3>What is the ICPC?</h3>
-                    <p>The International Collegiate Programming Contest (ICPC) is an annual multi-tiered competitive programming competition among the universities of the world.</p>
-                </li>
-                <li>
-                    <h3>Who are eligible to participate?</h3>
-                    <p>The entire competition will be held both onsite and online, and everyone is welcome to participate!</p>
-                </li>
-                <li>
-                    <h3>How many people should be in a team?</h3>
-                    <p>Teams should be formed out of a maximum of three people.</p>
-                </li>
-                <li>
-                    <h3>What kind of problems will we solve?</h3>
-                    <p>The problems that will be solved during the competition are similar to those found on Codeforces. To get an idea, have a look at this: <a href="https://codeforces.com/problemset/problem/4/A">https://codeforces.com/problemset/problem/4/A</a></p>
-                </li>
-                <li>
-                    <h3>Who have prepared the problems?</h3>
-                    <p>All the problems have been prepared by KBTU students and alumni.</p>
-                </li>
-                <li>
-                    <h3>Who have prepared the problems?</h3>
-                    <p>All the problems have been prepared by KBTU students and alumni.</p>
-                </li>
-            </ol>
-        </section>
-    
-    {% endblock %}
+<section id="sponsors">
+  <h2>Sponsors</h2>
+
+  <div class="sponsor-row">
+    <a href="https://agilab.kz" target="_blank" rel="noopener" class="sponsor-card">
+      <img alt="AGI Lab" src="{% static 'agi2.png' %}">
+    </a>
+    <a href="https://kbtu.edu.kz" target="_blank" rel="noopener" class="sponsor-card sponsor-card--white">
+      <img alt="KBTU" src="{% static 'kbtu2.png' %}">
+    </a>
+  </div>
+</section>
+
+<section id="follow">
+  <h2>Follow us</h2>
+  <div class="telegram-wrap">
+    <script async src="https://telegram.org/js/telegram-widget.js?22"
+      data-telegram-post="kbtuopen/307"
+      data-width="100%"
+      data-userpic="false"></script>
+  </div>
+</section>
+
+<section id="faq">
+  <h2>FAQ</h2>
+  <div class="faq-list">
+    <details>
+      <summary>Where is the event taking place?</summary>
+      <div class="faq-body">
+        Kazakh-British Technical University, Tole-bi street 59, Almaty. The entrance is from Abylaykhan street side.
+      </div>
+    </details>
+    <details>
+      <summary>What is the ICPC?</summary>
+      <div class="faq-body">
+        The International Collegiate Programming Contest (ICPC) is an annual multi-tiered competitive programming competition among universities worldwide.
+      </div>
+    </details>
+    <details>
+      <summary>Who is eligible to participate?</summary>
+      <div class="faq-body">
+        The competition is held both onsite and online — everyone is welcome to participate!
+      </div>
+    </details>
+    <details>
+      <summary>How many people should be in a team?</summary>
+      <div class="faq-body">
+        Teams consist of a maximum of three people.
+      </div>
+    </details>
+    <details>
+      <summary>What kind of problems will we solve?</summary>
+      <div class="faq-body">
+        Problems are similar to those found on Codeforces. For an example, see:
+        <a href="https://codeforces.com/problemset/problem/4/A" target="_blank" rel="noopener">codeforces.com/problemset/problem/4/A</a>.
+      </div>
+    </details>
+    <details>
+      <summary>Who prepared the problems?</summary>
+      <div class="faq-body">
+        All problems were prepared by KBTU students and alumni.
+      </div>
+    </details>
+  </div>
+</section>
+
+{% endblock %}
