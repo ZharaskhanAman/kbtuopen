@@ -103,10 +103,10 @@ class TeamAdmin(admin.ModelAdmin):
         "is_onsite",
         "is_women_team",
         "is_onsite",
-        "organization",
+        MembersCountFilter,
         "password_sent_at",
         "is_synced_with_dmoj",
-        MembersCountFilter,
+        "organization",
     ]
 
     actions = [
