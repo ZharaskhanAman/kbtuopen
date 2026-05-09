@@ -1,6 +1,7 @@
 import logging
 
 from django.contrib import admin
+from django.db import models
 from core.models import Organization, Team, Participant, ContestSettings
 from django.http import HttpResponse
 
@@ -51,6 +52,30 @@ def export_as_codeforces_format(modeladmin, request, queryset):
     return response
 
 
+class ParticipantInline(admin.TabularInline):
+    model = Participant
+    fields = ('full_name', 'tshirt_size')
+    extra = 0
+
+
+class MembersCountFilter(admin.SimpleListFilter):
+    title = "members count"
+    parameter_name = "members_count"
+
+    def lookups(self, request, model_admin):
+        return [
+            ('0', '0 members'),
+            ('1', '1 member'),
+            ('2', '2 members'),
+            ('3', '3 members'),
+        ]
+
+    def queryset(self, request, queryset):
+        if self.value() is None:
+            return queryset
+        return queryset.annotate(mc=models.Count('members')).filter(mc=int(self.value()))
+
+
 @admin.register(Organization)
 class OrganizationAdmin(admin.ModelAdmin):
     list_display = ('name',)
@@ -81,6 +106,7 @@ class TeamAdmin(admin.ModelAdmin):
         "organization",
         "password_sent_at",
         "is_synced_with_dmoj",
+        MembersCountFilter,
     ]
 
     actions = [
