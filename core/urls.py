@@ -9,6 +9,7 @@ from .views import (
     participant_view,
     teams_view,
     delete_team,
+    icpc26_results_view,
 )
 
 from .admin_views import export_teams_on_site, export_teams_off_site, upload_csv
@@ -23,6 +24,7 @@ urlpatterns = [
     path("organization", organization_view, name="organization"),
     path("participant", participant_view, name="participant"),
     path('delete_team', delete_team, name='delete_team'),
+    path('icpc26-results', icpc26_results_view, name='icpc26-results'),
 ]
 
 urlpatterns += [

@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block body %}
+<section style="margin-top:40px;">
+  <div style="text-align:center; padding: 40px 0 32px;">
+    <span class="hero-badge">ICPC 2026 Kazakhstan Qualification</span>
+    <h1 style="font-size:clamp(1.6rem,5vw,2.6rem);font-weight:800;margin:16px 0 8px;background:linear-gradient(135deg,#fff 0%,var(--accent) 60%,var(--accent2) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">KBTU Results</h1>
+    <p style="color:var(--muted);font-size:.95rem;">18 October 2026 &mdash; 44 teams</p>
+  </div>
+
+  <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;">
+    <table style="width:100%;border-collapse:collapse;font-size:.875rem;">
+      <thead>
+        <tr style="background:var(--surface2);border-bottom:1px solid var(--border);">
+          <th style="padding:12px 16px;text-align:left;color:var(--muted);font-size:.75rem;letter-spacing:.08em;text-transform:uppercase;width:60px;">#</th>
+          <th style="padding:12px 16px;text-align:left;color:var(--muted);font-size:.75rem;letter-spacing:.08em;text-transform:uppercase;">Team</th>
+          <th style="padding:12px 16px;text-align:left;color:var(--muted);font-size:.75rem;letter-spacing:.08em;text-transform:uppercase;">Members</th>
+          <th style="padding:12px 16px;text-align:center;color:var(--muted);font-size:.75rem;letter-spacing:.08em;text-transform:uppercase;width:70px;">Solved</th>
+          <th style="padding:12px 16px;text-align:right;color:var(--muted);font-size:.75rem;letter-spacing:.08em;text-transform:uppercase;width:110px;">Penalty</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for team in teams %}
+        <tr style="border-bottom:1px solid var(--border);transition:background .15s;" onmouseover="this.style.background='var(--surface2)'" onmouseout="this.style.background=''">
+          <td style="padding:12px 16px;color:{% if team.rank <= 3 %}var(--gold){% else %}var(--muted){% endif %};font-weight:700;">{{ team.rank }}</td>
+          <td style="padding:12px 16px;font-weight:600;color:var(--text);">{{ team.name }}</td>
+          <td style="padding:12px 16px;color:var(--muted);">{{ team.members }}</td>
+          <td style="padding:12px 16px;text-align:center;">
+            <span style="display:inline-block;padding:2px 10px;border-radius:100px;font-weight:700;font-size:.8rem;
+              {% if team.solved >= 7 %}background:rgba(34,197,94,.12);color:#4ade80;border:1px solid rgba(34,197,94,.25);
+              {% elif team.solved >= 5 %}background:rgba(79,142,247,.12);color:var(--accent);border:1px solid rgba(79,142,247,.25);
+              {% elif team.solved >= 3 %}background:rgba(245,197,66,.12);color:var(--gold);border:1px solid rgba(245,197,66,.25);
+              {% else %}background:var(--surface2);color:var(--muted);border:1px solid var(--border);{% endif %}">
+              {{ team.solved }}
+            </span>
+          </td>
+          <td style="padding:12px 16px;text-align:right;color:var(--muted);font-size:.8rem;font-family:monospace;">{{ team.penalty }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</section>
+{% endblock %}
