@@ -11,7 +11,9 @@
     <table style="width:100%;border-collapse:collapse;font-size:.875rem;">
       <thead>
         <tr style="background:var(--surface2);border-bottom:1px solid var(--border);">
-          <th style="padding:12px 16px;text-align:left;color:var(--muted);font-size:.75rem;letter-spacing:.08em;text-transform:uppercase;width:60px;">#</th>
+          <th style="padding:12px 16px;text-align:left;color:var(--muted);font-size:.75rem;letter-spacing:.08em;text-transform:uppercase;width:44px;">ID</th>
+          <th style="padding:12px 16px;text-align:left;color:var(--muted);font-size:.75rem;letter-spacing:.08em;text-transform:uppercase;width:70px;">Old Rank</th>
+          <th style="padding:12px 16px;text-align:left;color:var(--muted);font-size:.75rem;letter-spacing:.08em;text-transform:uppercase;width:70px;">New Rank</th>
           <th style="padding:12px 16px;text-align:left;color:var(--muted);font-size:.75rem;letter-spacing:.08em;text-transform:uppercase;">Team</th>
           <th style="padding:12px 16px;text-align:left;color:var(--muted);font-size:.75rem;letter-spacing:.08em;text-transform:uppercase;">Members</th>
           <th style="padding:12px 16px;text-align:center;color:var(--muted);font-size:.75rem;letter-spacing:.08em;text-transform:uppercase;width:70px;">Solved</th>
@@ -20,7 +22,9 @@
       </thead>
       <tbody>
         {% for team in teams %}
-        <tr style="border-bottom:1px solid var(--border);transition:background .15s;" onmouseover="this.style.background='var(--surface2)'" onmouseout="this.style.background=''">
+        <tr style="border-bottom:1px solid var(--border);transition:background .15s;{% if team.rank > team.old_rank %}background:rgba(239,68,68,.08);{% endif %}" onmouseover="this.style.background='{% if team.rank > team.old_rank %}rgba(239,68,68,.15){% else %}var(--surface2){% endif %}'" onmouseout="this.style.background='{% if team.rank > team.old_rank %}rgba(239,68,68,.08){% else %}{% endif %}'">
+          <td style="padding:12px 16px;color:var(--muted);font-weight:500;">{{ forloop.counter }}</td>
+          <td style="padding:12px 16px;color:var(--muted);font-weight:700;">{{ team.old_rank }}</td>
           <td style="padding:12px 16px;color:{% if team.rank <= 3 %}var(--gold){% else %}var(--muted){% endif %};font-weight:700;">{{ team.rank }}</td>
           <td style="padding:12px 16px;font-weight:600;color:var(--text);">{{ team.name }}</td>
           <td style="padding:12px 16px;color:var(--muted);">{{ team.members }}</td>
