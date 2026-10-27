@@ -10,7 +10,7 @@
 
     {# Team dashboard #}
     <h1 style="font-size:1.75rem;font-weight:800;margin-bottom:4px;">Your Team</h1>
-    <p class="form-sub">Manage your registration for KBTU Open Spring 2026</p>
+    <p class="form-sub">Manage your registration for KBTU OPEN FALL 2026</p>
 
     {% if team.status == 'accepted' %}
     <div style="background:rgba(34,197,94,.08);border:1px solid rgba(34,197,94,.25);border-radius:var(--radius);padding:16px 20px;margin-bottom:20px;">
@@ -119,7 +119,7 @@
   {% elif form %}
 
     <h1 style="font-size:1.75rem;font-weight:800;margin-bottom:4px;">Register your team</h1>
-    <p class="form-sub">KBTU Open Spring 2026 · May 10, 2026</p>
+    <p class="form-sub">KBTU OPEN FALL 2026 · 22 November, 2026</p>
 
     {% if not is_reg_open %}
     <div style="background:rgba(248,113,113,.08);border:1px solid rgba(248,113,113,.25);border-radius:var(--radius);padding:14px 18px;margin-bottom:20px;color:#f87171;font-weight:600;">
@@ -157,7 +157,7 @@
 <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:60vh;text-align:center;gap:16px;padding:40px 20px;">
   <div style="font-size:2.5rem;">🔐</div>
   <h1 style="font-size:1.5rem;font-weight:800;">Sign in to register</h1>
-  <p style="color:var(--muted);max-width:360px;">Log in with your Telegram account to register a team for KBTU Open Spring 2026.</p>
+  <p style="color:var(--muted);max-width:360px;">Log in with your Telegram account to register a team for KBTU OPEN FALL 2026.</p>
   <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:24px 32px;margin-top:8px;">
     <script async src="https://telegram.org/js/telegram-widget.js?22"
       data-telegram-login="{{ TELEGRAM_BOT_NAME }}"
