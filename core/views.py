@@ -60,7 +60,8 @@ def telegramLoginView(request):
 
 
 def homePageView(request):
-    context = {"user": request.user}
+    teams_count = Team.objects.annotate(num_members=Count('members')).filter(num_members__gt=0).count()
+    context = {"user": request.user, "teams_count": teams_count}
     return render(request, "index.html", context)
 
 
@@ -139,6 +140,21 @@ def delete_team(request):
 
     team.delete()
     return redirect('home')
+
+
+def halloffame_view(request):
+    from core.archive_data import EDITIONS
+    return render(request, 'halloffame.html', {'editions': EDITIONS})
+
+
+def archive_standings_view(request):
+    from core.archive_data import EDITIONS
+    selected = request.GET.get('edition', EDITIONS[0]['edition'])
+    edition_data = next((e for e in EDITIONS if e['edition'] == selected), EDITIONS[0])
+    return render(request, 'archive_standings.html', {
+        'editions': EDITIONS,
+        'selected': edition_data,
+    })
 
 
 def icpc26_results_view(request):

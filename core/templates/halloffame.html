@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+{% block body %}
+<div style="max-width:860px;margin:0 auto;">
+  <h1 style="font-size:2rem;font-weight:800;margin-bottom:8px;">Hall of Fame</h1>
+  <p style="color:var(--muted);margin-bottom:40px;">Top 3 teams from each KBTU Open edition.</p>
+
+  <div class="hof-list">
+    {% for ed in editions %}
+    <div class="hof-edition">
+      <div class="hof-year">{{ ed.edition }}</div>
+      <a href="{% url 'archive' %}?edition={{ ed.edition|urlencode }}" class="hof-standings-link">full standings ↗</a>
+      <div class="hof-podium">
+        {% for t in ed.teams|slice:":3" %}
+        <div class="hof-place {% if forloop.counter == 1 %}gold{% elif forloop.counter == 2 %}silver{% else %}bronze{% endif %}">
+          {% if forloop.counter == 1 %}🥇{% elif forloop.counter == 2 %}🥈{% else %}🥉{% endif %}
+          <div>
+            <span>{{ t.team }}</span>
+            {% if t.members %}<div class="hof-members">{{ t.members }}</div>{% endif %}
+            <div class="hof-meta">{{ t.solved }} solved · {{ t.penalty }}</div>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+
+<style>
+  .hof-members { font-size:.75rem; color:var(--muted); font-weight:400; margin-top:2px; }
+  .hof-meta { font-size:.72rem; color:var(--muted); font-weight:400; margin-top:2px; }
+  .hof-place { align-items: flex-start; gap: 10px; }
+  .hof-place span { display:block; font-size:.9rem; }
+</style>
+
+{% endblock %}

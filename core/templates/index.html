@@ -7,7 +7,17 @@
   <div class="hero-badge">36th Edition</div>
   <h1>KBTU OPEN FALL 2026</h1>
   <p>Regular ICPC-style programming contest organized by Kazakh-British Technical University</p>
-  <p class="hero-date">📅 <span>22 November, 2026</span> &nbsp;·&nbsp; Almaty, Kazakhstan</p>
+  <p class="hero-date"><span>22 November, 2026</span> · Almaty, Kazakhstan</p>
+  <div class="countdown" id="countdown">
+    <div class="cd-unit"><span class="cd-num" id="cd-days">--</span><span class="cd-label">days</span></div>
+    <div class="cd-sep">:</div>
+    <div class="cd-unit"><span class="cd-num" id="cd-hours">--</span><span class="cd-label">hours</span></div>
+    <div class="cd-sep">:</div>
+    <div class="cd-unit"><span class="cd-num" id="cd-mins">--</span><span class="cd-label">min</span></div>
+    <div class="cd-sep">:</div>
+    <div class="cd-unit"><span class="cd-num" id="cd-secs">--</span><span class="cd-label">sec</span></div>
+  </div>
+
   <div class="btn-row">
     <a href="{% url 'team' %}" class="btn btn-primary">Register your team</a>
     <a href="{% url 'teams' %}" class="btn btn-secondary">View teams</a>
@@ -96,13 +106,15 @@
 
   <div class="sponsor-row">
     <a href="https://nace.ai" target="_blank" rel="noopener" class="sponsor-card">
-      <img alt="nace.ai" src="{% static 'nace-logo-white.svg' %}">
+      <img alt="nace.ai" src="{% static 'nace-logo-black.svg' %}">
+      <span class="sponsor-card-name">nace.ai</span>
     </a>
-    <a href="https://deepinfra.com" target="_blank" rel="noopener" class="sponsor-card">
+    <a href="https://deepinfra.com" target="_blank" rel="noopener" class="sponsor-card sponsor-card--dark">
       <img alt="DeepInfra" src="{% static 'deepinfra.svg' %}">
     </a>
-    <a href="https://kbtu.edu.kz" target="_blank" rel="noopener" class="sponsor-card sponsor-card--white">
+    <a href="https://kbtu.edu.kz" target="_blank" rel="noopener" class="sponsor-card">
       <img alt="KBTU" src="{% static 'kbtu2.png' %}">
+      <span class="sponsor-card-name">kbtu.edu.kz</span>
     </a>
   </div>
 </section>
@@ -166,4 +178,27 @@
   </div>
 </section>
 
+<script>
+  (function() {
+    var event = new Date('2026-11-22T12:00:00+06:00');
+    function pad(n) { return String(n).padStart(2, '0'); }
+    function tick() {
+      var diff = event - Date.now();
+      if (diff <= 0) {
+        document.getElementById('countdown').innerHTML = '<span style="color:var(--accent);font-weight:700;">Contest is live! 🚀</span>';
+        return;
+      }
+      var d = Math.floor(diff / 86400000);
+      var h = Math.floor(diff % 86400000 / 3600000);
+      var m = Math.floor(diff % 3600000 / 60000);
+      var s = Math.floor(diff % 60000 / 1000);
+      document.getElementById('cd-days').textContent = pad(d);
+      document.getElementById('cd-hours').textContent = pad(h);
+      document.getElementById('cd-mins').textContent = pad(m);
+      document.getElementById('cd-secs').textContent = pad(s);
+    }
+    tick();
+    setInterval(tick, 1000);
+  })();
+</script>
 {% endblock %}

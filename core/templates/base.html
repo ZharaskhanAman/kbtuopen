@@ -4,34 +4,58 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>KBTU OPEN FALL 2026</title>
+
+  <!-- OG / Social -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="KBTU OPEN FALL 2026 — 36th Edition">
+  <meta property="og:description" content="Regular ICPC-style programming contest organized by Kazakh-British Technical University. 22 November 2026, Almaty.">
+  <meta property="og:url" content="https://kbtuopen.fly.dev/">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="KBTU OPEN FALL 2026">
+  <meta name="twitter:description" content="ICPC-style programming contest. 22 November 2026, Almaty, Kazakhstan.">
+  <meta name="description" content="Regular ICPC-style programming contest organized by Kazakh-British Technical University. 22 November 2026, Almaty.">
+
+  <!-- Inter font -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --bg: #0d0f14;
-      --surface: #161a24;
-      --surface2: #1e2433;
-      --border: #2a3045;
-      --accent: #4f8ef7;
-      --accent2: #7c5cfc;
-      --gold: #f5c542;
-      --silver: #b0b8c8;
-      --bronze: #cd7f32;
-      --text: #e4e8f0;
-      --muted: #8892a4;
+      --bg: #ffffff;
+      --surface: #f8fafc;
+      --surface2: #f1f5f9;
+      --border: #e2e8f0;
+      --accent: #2563eb;
+      --accent2: #7c3aed;
+      --gold: #d97706;
+      --silver: #64748b;
+      --bronze: #b45309;
+      --text: #0f172a;
+      --muted: #64748b;
       --radius: 12px;
       --max: 860px;
     }
 
-    html { scroll-behavior: smooth; }
+    html { scroll-behavior: smooth; overflow-x: clip; }
 
     body {
       background: var(--bg);
       color: var(--text);
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
       font-size: 16px;
       line-height: 1.6;
+      overflow-x: clip;
     }
+
+    img, iframe, video, embed { max-width: 100%; }
+
+    /* prevent any child from widening its grid/flex parent */
+    main, section, nav, footer, .addl-card, .prize-card, .timeline-item, .sponsor-card { min-width: 0; }
+    .addl-info { min-width: 0; overflow: hidden; }
+    section { overflow: hidden; }
 
     a { color: var(--accent); text-decoration: none; }
     a:hover { text-decoration: underline; }
@@ -41,39 +65,86 @@
       position: sticky;
       top: 0;
       z-index: 100;
-      background: rgba(13, 15, 20, 0.85);
+      background: rgba(255, 255, 255, 0.95);
       backdrop-filter: blur(12px);
       border-bottom: 1px solid var(--border);
+      padding: 0 20px;
+    }
+    .nav-inner {
+      max-width: var(--max);
+      margin: 0 auto;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 0 24px;
       height: 56px;
+      gap: 12px;
     }
     .nav-brand {
       font-weight: 700;
-      font-size: 1rem;
+      font-size: .95rem;
       letter-spacing: .02em;
-      color: var(--text);
+      white-space: nowrap;
+      flex-shrink: 0;
       background: linear-gradient(90deg, var(--accent), var(--accent2));
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
     }
-    .nav-links { display: flex; gap: 8px; }
+    .nav-links {
+      display: flex;
+      gap: 2px;
+      align-items: center;
+    }
     .nav-links a {
       color: var(--muted);
-      font-size: .875rem;
-      padding: 6px 14px;
+      font-size: .82rem;
+      padding: 6px 11px;
       border-radius: 6px;
       transition: color .2s, background .2s;
+      white-space: nowrap;
     }
     .nav-links a:hover { color: var(--text); background: var(--surface2); text-decoration: none; }
     .nav-cta {
       background: linear-gradient(135deg, var(--accent), var(--accent2)) !important;
       color: #fff !important;
       -webkit-text-fill-color: #fff !important;
+      border-radius: 7px !important;
     }
     .nav-cta:hover { opacity: .9; background: linear-gradient(135deg, var(--accent), var(--accent2)) !important; }
+    /* hamburger */
+    .nav-hamburger {
+      display: none;
+      flex-direction: column;
+      justify-content: center;
+      gap: 5px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 6px;
+      flex-shrink: 0;
+      border-radius: 6px;
+    }
+    .nav-hamburger:hover { background: var(--surface2); }
+    .nav-hamburger span {
+      display: block;
+      width: 20px;
+      height: 2px;
+      background: var(--text);
+      border-radius: 2px;
+      transition: .25s;
+    }
+    @media (max-width: 600px) {
+      .nav-inner { flex-wrap: wrap; height: auto; padding: 10px 0; }
+      .nav-hamburger { display: flex; }
+      .nav-links {
+        display: none;
+        width: 100%;
+        flex-wrap: wrap;
+        padding-bottom: 10px;
+        gap: 4px;
+      }
+      .nav-links.is-open { display: flex; }
+      .nav-links a { font-size: .82rem; }
+    }
 
     /* FORMS */
     .form-page { max-width: 560px; margin: 40px auto 0; }
@@ -172,8 +243,8 @@
       font-size: .8rem;
       font-weight: 600;
     }
-    .status-accepted { background: rgba(34,197,94,.12); color: #4ade80; border: 1px solid rgba(34,197,94,.25); }
-    .status-pending  { background: rgba(245,197,66,.12); color: var(--gold); border: 1px solid rgba(245,197,66,.25); }
+    .status-accepted { background: rgba(34,197,94,.12); color: #16a34a; border: 1px solid rgba(34,197,94,.35); }
+    .status-pending  { background: rgba(217,119,6,.1); color: #d97706; border: 1px solid rgba(217,119,6,.3); }
     .status-other    { background: var(--surface2); color: var(--muted); border: 1px solid var(--border); }
 
     /* MAIN */
@@ -182,14 +253,14 @@
     /* HERO */
     .hero {
       text-align: center;
-      padding: 80px 20px 60px;
+      padding: 60px 20px 50px;
       position: relative;
     }
     .hero::before {
       content: "";
       position: absolute;
       inset: 0;
-      background: radial-gradient(ellipse 80% 60% at 50% 0%, rgba(79,142,247,.15) 0%, transparent 70%);
+      background: radial-gradient(ellipse 80% 60% at 50% 0%, rgba(37,99,235,.08) 0%, transparent 70%);
       pointer-events: none;
     }
     .hero-badge {
@@ -206,32 +277,100 @@
       margin-bottom: 24px;
     }
     .hero h1 {
-      font-size: clamp(2rem, 6vw, 3.5rem);
+      font-size: clamp(1.6rem, 5vw, 3.5rem);
       font-weight: 800;
-      line-height: 1.1;
+      line-height: 1.15;
       letter-spacing: -.02em;
-      background: linear-gradient(135deg, #fff 0%, var(--accent) 60%, var(--accent2) 100%);
+      background: linear-gradient(135deg, #1e3a8a 0%, var(--accent) 55%, var(--accent2) 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       margin-bottom: 16px;
     }
     .hero p {
       color: var(--muted);
-      font-size: 1.1rem;
-      max-width: 520px;
+      font-size: 1rem;
+      max-width: 480px;
       margin: 0 auto 12px;
     }
     .hero-date {
       display: inline-flex;
+      flex-wrap: wrap;
       align-items: center;
-      gap: 8px;
+      justify-content: center;
+      gap: 6px 10px;
       color: var(--text);
-      font-size: 1rem;
+      font-size: .95rem;
       font-weight: 600;
-      margin-bottom: 36px;
+      margin-bottom: 32px;
     }
     .hero-date span { color: var(--gold); }
+
+    /* COUNTDOWN */
+    .countdown {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 4px;
+      margin: 16px auto 28px;
+    }
+    .cd-unit {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 10px 14px;
+      min-width: 62px;
+    }
+    .cd-num {
+      font-size: 1.6rem;
+      font-weight: 800;
+      line-height: 1;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      font-variant-numeric: tabular-nums;
+    }
+    .cd-label {
+      font-size: .65rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      color: var(--muted);
+      margin-top: 4px;
+    }
+    .cd-sep {
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: var(--border);
+      padding: 0 2px;
+      margin-bottom: 16px;
+    }
+    .teams-count {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      margin-top: 16px;
+      background: rgba(37,99,235,.08);
+      border: 1px solid rgba(37,99,235,.18);
+      border-radius: 100px;
+      padding: 5px 14px;
+      font-size: .82rem;
+      font-weight: 600;
+      color: var(--accent);
+    }
+    .teams-count::before {
+      content: "";
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #22c55e;
+      flex-shrink: 0;
+    }
+
     .btn-row { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+    .btn-row .btn { min-width: 200px; text-align: center; }
     .btn {
       display: inline-block;
       padding: 11px 28px;
@@ -313,6 +452,13 @@
       border-radius: 50%;
       background: var(--accent);
       border: 2px solid var(--bg);
+    }
+    @media (max-width: 480px) {
+      .timeline-item { grid-template-columns: 1fr; gap: 0; }
+      .timeline-item::before { display: none; }
+      .timeline-time { text-align: left; padding: 14px 0 2px; font-size: .8rem; }
+      .timeline-body { padding: 0 0 16px 0; }
+      .timeline-body::before { display: none; }
     }
 
     /* PRIZES */
@@ -400,21 +546,60 @@
     .addl-value { font-size: 1rem; font-weight: 700; color: var(--text); }
     .addl-sub { font-size: .8rem; color: var(--muted); margin-top: 2px; }
 
-    /* SPONSORS */
-    .sponsor-tier { margin-bottom: 24px; }
-    .sponsor-tier-label {
-      font-size: .7rem;
-      font-weight: 700;
-      letter-spacing: .12em;
-      text-transform: uppercase;
-      color: var(--muted);
-      margin-bottom: 12px;
-    }
-    .sponsor-row {
-      display: flex;
-      flex-wrap: wrap;
+    /* HALL OF FAME */
+    .hof-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
       gap: 14px;
+    }
+    .hof-edition {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px;
+      transition: border-color .2s, box-shadow .2s;
+    }
+    .hof-edition:hover { border-color: var(--accent); box-shadow: 0 4px 16px rgba(37,99,235,.08); }
+    .hof-year {
+      font-size: .78rem;
+      font-weight: 700;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 4px;
+    }
+    .hof-standings-link {
+      font-size: .72rem;
+      color: var(--muted);
+      display: block;
+      margin-bottom: 14px;
+    }
+    .hof-standings-link:hover { color: var(--accent); }
+    .hof-podium { display: flex; flex-direction: column; gap: 8px; }
+    .hof-place {
+      display: flex;
       align-items: center;
+      gap: 8px;
+      font-size: .88rem;
+      font-weight: 600;
+      color: var(--text);
+    }
+    .hof-place span { color: var(--muted); font-weight: 500; }
+    .hof-place.gold span { color: var(--gold); font-weight: 700; }
+    .hof-place.silver span { color: var(--silver); font-weight: 600; }
+    .hof-place.bronze span { color: var(--bronze); font-weight: 600; }
+
+    /* SPONSORS */
+    .sponsor-row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+    }
+    @media (max-width: 600px) {
+      .sponsor-row { grid-template-columns: 1fr; }
+      .sponsor-card { height: auto; padding: 20px 24px; flex-direction: row; justify-content: flex-start; gap: 16px; }
+      .sponsor-card img { max-height: 40px; flex-shrink: 0; }
+      .sponsor-card--dark img { max-height: 32px; }
     }
     .sponsor-card {
       display: flex;
@@ -425,49 +610,47 @@
       background: var(--surface);
       border: 1px solid var(--border);
       border-radius: var(--radius);
-      padding: 22px 32px;
+      padding: 24px 16px;
+      height: 130px;
       text-decoration: none;
-      transition: border-color .2s, background .2s, transform .2s;
+      transition: border-color .2s, background .2s, transform .2s, box-shadow .2s;
     }
     .sponsor-card:hover {
       border-color: var(--accent);
-      background: var(--surface2);
+      background: #fff;
       transform: translateY(-3px);
+      box-shadow: 0 8px 24px rgba(37,99,235,.1);
       text-decoration: none;
     }
-    .sponsor-card.main { padding: 28px 48px; }
     .sponsor-card img {
       display: block;
-      height: 72px;
+      max-height: 52px;
+      max-width: 100%;
       width: auto;
-      filter: grayscale(1) brightness(1.5);
+      height: auto;
+      object-fit: contain;
+      filter: grayscale(1) brightness(0.25);
       transition: filter .2s;
-    }
-    @media (min-width: 600px) {
-      .sponsor-card { padding: 32px 56px; }
-      .sponsor-card img { height: 120px; }
     }
     .sponsor-card:hover img { filter: grayscale(0) brightness(1); }
     .sponsor-card-name {
-      font-size: .75rem;
+      font-size: .72rem;
       color: var(--muted);
-      font-weight: 500;
+      font-weight: 600;
+      letter-spacing: .04em;
       transition: color .2s;
     }
     .sponsor-card:hover .sponsor-card-name { color: var(--accent); }
-    /* white-bg variant for logos with light backgrounds */
-    .sponsor-card--white {
-      background: #fff;
-      border-color: #e2e8f0;
+    /* dark card for logos with white fills */
+    .sponsor-card--dark {
+      background: #16213e;
+      border-color: #1a2a4a;
     }
-    .sponsor-card--white:hover {
-      background: #f1f5fb;
-      border-color: var(--accent);
-    }
-    .sponsor-card--white img { filter: none; }
-    .sponsor-card--white:hover img { filter: none; }
-    .sponsor-card--white .sponsor-card-name { color: #64748b; }
-    .sponsor-card--white:hover .sponsor-card-name { color: var(--accent); }
+    .sponsor-card--dark:hover { background: #1a2748; border-color: var(--accent); box-shadow: 0 8px 24px rgba(37,99,235,.15); }
+    .sponsor-card--dark img { filter: none; max-height: 44px; }
+    .sponsor-card--dark:hover img { filter: none; }
+    .sponsor-card--dark .sponsor-card-name { color: #94a3b8; }
+    .sponsor-card--dark:hover .sponsor-card-name { color: #93c5fd; }
 
     /* TELEGRAM */
     .telegram-wrap {
@@ -476,6 +659,8 @@
       border-radius: var(--radius);
       padding: 20px;
       max-width: 540px;
+      overflow: hidden;
+      width: 100%;
     }
 
     /* FAQ */
@@ -528,15 +713,27 @@
 <body>
 
   <nav>
-    <a href="/" class="nav-brand" style="-webkit-text-fill-color:transparent;">KBTU OPEN FALL 2026</a>
-    <div class="nav-links">
-      <a href="/#schedule">Schedule</a>
-      <a href="/#prizes">Prizes</a>
-      <a href="/#faq">FAQ</a>
-      <a href="{% url 'teams' %}">Teams</a>
-      <a href="{% url 'team' %}" class="nav-cta">Register</a>
+    <div class="nav-inner">
+      <a href="/" class="nav-brand" style="-webkit-text-fill-color:transparent;">KBTU OPEN FALL 2026</a>
+      <button class="nav-hamburger" id="navToggle" aria-label="Toggle menu">
+        <span></span><span></span><span></span>
+      </button>
+      <div class="nav-links" id="navLinks">
+        <a href="/#schedule">Schedule</a>
+        <a href="/#prizes">Prizes</a>
+        <a href="{% url 'halloffame' %}">Hall of Fame</a>
+        <a href="{% url 'archive' %}">Archive</a>
+        <a href="/#faq">FAQ</a>
+        <a href="{% url 'teams' %}">Teams</a>
+        <a href="{% url 'team' %}" class="nav-cta">Register</a>
+      </div>
     </div>
   </nav>
+  <script>
+    document.getElementById('navToggle').addEventListener('click', function() {
+      document.getElementById('navLinks').classList.toggle('is-open');
+    });
+  </script>
 
   <main>
     {% block body %}{% endblock %}
