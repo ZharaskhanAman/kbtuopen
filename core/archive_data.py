@@ -688,6 +688,21 @@ EDITIONS = [
         ],
     },
     {
+        "edition": "2021 Fall",
+        "url": "",
+        "teams": [
+            {"rank": 1,  "team": "AITU: ARRRR",                    "members": "Sardarbekov, Satylkhanov, Bayarstanov",  "solved": 0, "penalty": "", "unofficial": False},
+            {"rank": 2,  "team": "AITU: VIP",                      "members": "Kyzyrkanov, Kamzabek, Muratov",         "solved": 0, "penalty": "", "unofficial": False},
+            {"rank": 3,  "team": "KBTU: ( ͡ಠ ʖ̯ ͡ಠ )",           "members": "Altybay, Madibek, Khibadullin",         "solved": 0, "penalty": "", "unofficial": False},
+            {"rank": 4,  "team": "NU: Мұз айбыны",                 "members": "Batyrkhan, Omarov, Aldazharov",         "solved": 0, "penalty": "", "unofficial": False},
+            {"rank": 5,  "team": "Harbour.Space U: kempirqosaq",   "members": "Baibolov, Tursynbay, Kanatuly",         "solved": 0, "penalty": "", "unofficial": False},
+            {"rank": 6,  "team": "KBTU: Снизу нас мешки",          "members": "Bekbolatuly, Auganov, Amanov",          "solved": 0, "penalty": "", "unofficial": False},
+            {"rank": 7,  "team": "IITU: SuperNoVa",                "members": "Kuanyshbay, Altynbekov, Shormankhan",   "solved": 0, "penalty": "", "unofficial": False},
+            {"rank": 13, "team": "NIS+BIL: VimTeam",               "members": "Ashurov, Maksotov",                    "solved": 0, "penalty": "", "unofficial": False},
+            {"rank": 20, "team": "BIL: ACCEPTED-DRXGONS-LEGION",   "members": "Mukhametkarim, Aitkazy, Sakenuly",     "solved": 0, "penalty": "", "unofficial": False},
+        ],
+    },
+    {
         "edition": "2021 Spring",
         "url": "",
         "teams": [
