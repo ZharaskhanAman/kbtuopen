@@ -17,7 +17,7 @@
           <div>
             <span>{{ t.team }}</span>
             {% if t.members %}<div class="hof-members">{{ t.members }}</div>{% endif %}
-            <div class="hof-meta">{{ t.solved }} solved · {{ t.penalty }}</div>
+            {% if t.penalty %}<div class="hof-meta">{{ t.solved }} solved · {{ t.penalty }}</div>{% endif %}
           </div>
         </div>
         {% endfor %}
