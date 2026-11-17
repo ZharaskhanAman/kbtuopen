@@ -124,8 +124,42 @@ def team_view(request):
             else:
                 form = TeamForm()
 
-    is_registration_open = ContestSettings.objects.get(id=1)         
-    return render(request, 'team.html', {'form': form, 'user': request.user, 'team': team, 'participant_form': participant_form, 'is_reg_open': is_registration_open})
+    from django.conf import settings
+    is_registration_open = ContestSettings.objects.get(id=1)
+    return render(request, 'team.html', {'form': form, 'user': request.user, 'team': team, 'participant_form': participant_form, 'is_reg_open': is_registration_open, 'debug': settings.DEBUG})
+
+
+def dev_login_view(request):
+    from django.conf import settings
+    if not settings.DEBUG:
+        raise PermissionDenied("Only available in DEBUG mode.")
+
+    if request.method == 'POST':
+        user_id = request.POST.get('user_id', '').strip()
+        if user_id:
+            User = get_user_model()
+            user, _ = User.objects.get_or_create(username=user_id)
+            if not user.has_usable_password():
+                pass
+            else:
+                user.set_unusable_password()
+                user.save()
+            login(request, user)
+        return redirect('team')
+    raise PermissionDenied()
+
+
+def delete_member(request, member_id):
+    if not request.user.is_authenticated:
+        raise PermissionDenied()
+    from core.models import Participant
+    try:
+        member = Participant.objects.get(id=member_id, team=request.user.team)
+    except (Participant.DoesNotExist, AttributeError):
+        raise PermissionDenied()
+    if request.method == 'POST':
+        member.delete()
+    return redirect('team')
 
 
 def delete_team(request):

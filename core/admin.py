@@ -79,6 +79,8 @@ class MembersCountFilter(admin.SimpleListFilter):
 @admin.register(Organization)
 class OrganizationAdmin(admin.ModelAdmin):
     list_display = ('name',)
+    search_fields = ('name',)
+    ordering = ('name',)
 
 
 @admin.register(Team)
@@ -102,12 +104,14 @@ class TeamAdmin(admin.ModelAdmin):
         "status",
         "is_onsite",
         "is_women_team",
-        "is_onsite",
         MembersCountFilter,
         "password_sent_at",
         "is_synced_with_dmoj",
-        "organization",
     ]
+
+    autocomplete_fields = ['organization']
+
+    search_fields = ['name', 'organization__name', 'owner__username']
 
     actions = [
         send_creds,

@@ -78,6 +78,7 @@
           <tr style="border-bottom:1px solid var(--border);">
             <th style="padding:10px 20px;text-align:left;color:var(--muted);font-size:.7rem;letter-spacing:.08em;text-transform:uppercase;">Full name</th>
             <th style="padding:10px 20px;text-align:left;color:var(--muted);font-size:.7rem;letter-spacing:.08em;text-transform:uppercase;">T-shirt</th>
+            <th></th>
           </tr>
         </thead>
         <tbody>
@@ -85,6 +86,12 @@
           <tr style="border-bottom:1px solid var(--border);">
             <td style="padding:11px 20px;color:var(--text);font-weight:500;">{{ member.full_name }}</td>
             <td style="padding:11px 20px;color:var(--muted);">{{ member.tshirt_size }}</td>
+            <td style="padding:11px 20px;text-align:right;">
+              <form method="post" action="{% url 'delete_member' member.id %}" onsubmit="return confirm('Remove {{ member.full_name }}?');">
+                {% csrf_token %}
+                <button type="submit" style="background:none;border:none;color:#f87171;font-size:.8rem;font-weight:600;cursor:pointer;padding:0;">Remove</button>
+              </form>
+            </td>
           </tr>
           {% endfor %}
         </tbody>
@@ -132,18 +139,292 @@
       <form method="post">
         {% csrf_token %}
         {% for field in form %}
+        {% if field.name == "is_onsite" %}
+        <div class="yn-group">
+          {{ field }}
+          <p class="yn-question">Are you going to participate offline?</p>
+          <div class="yn-options">
+            <label class="yn-opt" data-for="{{ field.id_for_label }}" data-val="yes">Yes</label>
+            <label class="yn-opt" data-for="{{ field.id_for_label }}" data-val="no">No</label>
+          </div>
+        </div>
+        {% elif field.name == "is_school_team" %}
+        <div class="yn-group">
+          {{ field }}
+          <p class="yn-question">Is your team only from school students?</p>
+          <div class="yn-options">
+            <label class="yn-opt" data-for="{{ field.id_for_label }}" data-val="yes">Yes</label>
+            <label class="yn-opt" data-for="{{ field.id_for_label }}" data-val="no">No</label>
+          </div>
+        </div>
+        {% elif field.name == "is_women_team" %}
+        <div class="yn-group">
+          {{ field }}
+          <p class="yn-question">Is this a women's team?</p>
+          <div class="yn-options">
+            <label class="yn-opt" data-for="{{ field.id_for_label }}" data-val="yes">Yes</label>
+            <label class="yn-opt" data-for="{{ field.id_for_label }}" data-val="no">No</label>
+          </div>
+        </div>
+        {% else %}
         <div class="field-group">
           {% if field.errors %}<ul class="field-errorlist">{% for e in field.errors %}<li>{{ e }}</li>{% endfor %}</ul>{% endif %}
           {{ field.label_tag }}
-          {{ field }}
           {% if field.name == "organization" %}
-          <p class="form-hint">Don't see your org? <a href="{% url 'organization' %}">Create one here</a></p>
+            {{ field }}
+            <p class="form-hint">Don't see your org? <a href="{% url 'organization' %}">Create one here</a></p>
+          {% else %}
+            {{ field }}
           {% endif %}
         </div>
+        {% endif %}
         {% endfor %}
         <button type="submit" class="btn-submit">Register team</button>
       </form>
     </div>
+
+    <style>
+      .yn-group {
+        margin-bottom: 20px;
+      }
+      .yn-group input[type="checkbox"] { display: none; }
+      .yn-question {
+        font-size: .8rem;
+        font-weight: 600;
+        letter-spacing: .05em;
+        text-transform: uppercase;
+        color: var(--muted);
+        margin-bottom: 8px;
+      }
+      .yn-options {
+        display: flex;
+        gap: 8px;
+      }
+      .yn-opt {
+        flex: 1;
+        padding: 10px;
+        text-align: center;
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        font-size: .9rem;
+        font-weight: 600;
+        cursor: pointer;
+        background: var(--surface2);
+        color: var(--muted);
+        transition: border-color .15s, background .15s, color .15s;
+        user-select: none;
+      }
+      .yn-opt:hover { border-color: #94a3b8; color: var(--text); }
+      .yn-opt.yn-yes.selected {
+        background: rgba(37,99,235,.08);
+        border-color: var(--accent);
+        color: var(--accent);
+      }
+      .yn-opt.yn-no.selected {
+        background: rgba(100,116,139,.1);
+        border-color: #64748b;
+        color: #334155;
+      }
+      #id_organization { display: none; }
+      .org-select-wrapper { position: relative; }
+      .org-select-wrapper.open .org-search-input {
+        border-color: var(--accent);
+        border-bottom-left-radius: 0;
+        border-bottom-right-radius: 0;
+      }
+      .org-search-input {
+        width: 100%;
+        background: var(--surface2);
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        color: var(--text);
+        font-size: .95rem;
+        padding: 10px 36px 10px 14px;
+        outline: none;
+        transition: border-color .2s;
+        font-family: inherit;
+        cursor: pointer;
+      }
+      .org-search-input:focus { border-color: var(--accent); }
+      .org-search-input::placeholder { color: var(--muted); }
+      .org-search-arrow {
+        position: absolute;
+        right: 12px;
+        top: 50%;
+        transform: translateY(-50%);
+        pointer-events: none;
+        color: var(--muted);
+        font-size: .75rem;
+        transition: transform .2s;
+      }
+      .org-select-wrapper.open .org-search-arrow { transform: translateY(-50%) rotate(180deg); }
+      .org-dropdown {
+        display: none;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        background: #fff;
+        border: 1px solid var(--accent);
+        border-top: none;
+        border-radius: 0 0 8px 8px;
+        max-height: 220px;
+        overflow-y: auto;
+        z-index: 999;
+        box-shadow: 0 6px 20px rgba(37,99,235,.12);
+      }
+      .org-select-wrapper.open .org-dropdown { display: block; }
+      .org-option {
+        padding: 9px 14px;
+        cursor: pointer;
+        font-size: .9rem;
+        transition: background .12s;
+        border-bottom: 1px solid var(--border);
+      }
+      .org-option:last-child { border-bottom: none; }
+      .org-option:hover { background: var(--surface2); }
+      .org-option.active { background: rgba(37,99,235,.07); color: var(--accent); font-weight: 600; }
+      .org-option.hidden { display: none; }
+      .org-no-results {
+        padding: 10px 14px;
+        font-size: .88rem;
+        color: var(--muted);
+        font-style: italic;
+      }
+    </style>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      document.querySelectorAll('.yn-group').forEach(function(group) {
+        const cb = group.querySelector('input[type="checkbox"]');
+        const opts = group.querySelectorAll('.yn-opt');
+        opts[0].classList.add('yn-yes');
+        opts[1].classList.add('yn-no');
+
+        function update() {
+          opts[0].classList.toggle('selected', cb.checked);
+          opts[1].classList.toggle('selected', !cb.checked);
+        }
+        update();
+
+        opts[0].addEventListener('click', function() { cb.checked = true; update(); });
+        opts[1].addEventListener('click', function() { cb.checked = false; update(); });
+      });
+
+      const sel = document.getElementById('id_organization');
+      if (!sel) return;
+
+      const options = Array.from(sel.options).filter(o => o.value !== '');
+
+      const wrapper = document.createElement('div');
+      wrapper.className = 'org-select-wrapper';
+      sel.parentNode.insertBefore(wrapper, sel);
+      wrapper.appendChild(sel);
+
+      const inputWrap = document.createElement('div');
+      inputWrap.style.position = 'relative';
+      wrapper.appendChild(inputWrap);
+
+      const input = document.createElement('input');
+      input.type = 'text';
+      input.className = 'org-search-input';
+      input.placeholder = 'Search organization…';
+      input.autocomplete = 'off';
+      inputWrap.appendChild(input);
+
+      const arrow = document.createElement('span');
+      arrow.className = 'org-search-arrow';
+      arrow.textContent = '▾';
+      inputWrap.appendChild(arrow);
+
+      const dropdown = document.createElement('div');
+      dropdown.className = 'org-dropdown';
+      wrapper.appendChild(dropdown);
+
+      options.forEach(function(o) {
+        const item = document.createElement('div');
+        item.className = 'org-option';
+        item.textContent = o.text;
+        item.dataset.value = o.value;
+        dropdown.appendChild(item);
+      });
+
+      const noResults = document.createElement('div');
+      noResults.className = 'org-no-results';
+      noResults.textContent = 'No results';
+      noResults.style.display = 'none';
+      dropdown.appendChild(noResults);
+
+      function filter(q) {
+        let visible = 0;
+        dropdown.querySelectorAll('.org-option').forEach(function(item) {
+          const match = item.textContent.toLowerCase().includes(q.toLowerCase());
+          item.classList.toggle('hidden', !match);
+          if (match) visible++;
+        });
+        noResults.style.display = visible === 0 ? 'block' : 'none';
+      }
+
+      function open() {
+        wrapper.classList.add('open');
+        input.placeholder = 'Type to search…';
+        input.select();
+        filter(input.dataset.query || '');
+      }
+
+      function close() {
+        wrapper.classList.remove('open');
+        input.placeholder = sel.value
+          ? (options.find(o => o.value === sel.value) || {text: 'Search organization…'}).text
+          : 'Search organization…';
+        input.value = '';
+        input.dataset.query = '';
+      }
+
+      function select(value, label) {
+        sel.value = value;
+        wrapper.classList.remove('open');
+        input.placeholder = label;
+        input.value = '';
+        input.dataset.query = '';
+        dropdown.querySelectorAll('.org-option').forEach(function(item) {
+          item.classList.toggle('active', item.dataset.value === value);
+          item.classList.remove('hidden');
+        });
+        noResults.style.display = 'none';
+      }
+
+      input.addEventListener('click', function() {
+        if (wrapper.classList.contains('open')) { close(); } else { open(); }
+      });
+
+      input.addEventListener('input', function() {
+        input.dataset.query = this.value;
+        filter(this.value);
+        wrapper.classList.add('open');
+      });
+
+      dropdown.addEventListener('click', function(e) {
+        const item = e.target.closest('.org-option');
+        if (!item) return;
+        select(item.dataset.value, item.textContent);
+      });
+
+      document.addEventListener('click', function(e) {
+        if (!wrapper.contains(e.target)) close();
+      });
+
+      if (sel.value) {
+        const found = options.find(o => o.value === sel.value);
+        if (found) {
+          input.placeholder = found.text;
+          dropdown.querySelectorAll('.org-option').forEach(function(item) {
+            item.classList.toggle('active', item.dataset.value === sel.value);
+          });
+        }
+      }
+    });
+    </script>
     {% endif %}
 
     <a href="{% url 'logout' %}" style="display:block;text-align:center;margin-top:16px;color:var(--muted);font-size:.85rem;">Log out</a>
@@ -155,9 +436,20 @@
 {% else %}
 
 <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:60vh;text-align:center;gap:16px;padding:40px 20px;">
-  <div style="font-size:2.5rem;">🔐</div>
-  <h1 style="font-size:1.5rem;font-weight:800;">Sign in to register</h1>
-  <p style="color:var(--muted);max-width:360px;">Log in with your Telegram account to register a team for KBTU OPEN FALL 2026.</p>
+  {% if debug %}
+  <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:24px 32px;">
+    <p style="font-size:.75rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:12px;">Dev login</p>
+    <form method="post" action="{% url 'dev_login' %}" style="display:flex;gap:8px;">
+      {% csrf_token %}
+      <input type="text" name="user_id" placeholder="Telegram user ID" required
+        style="padding:9px 14px;border:1px solid var(--border);border-radius:8px;font-family:inherit;font-size:.9rem;outline:none;width:180px;">
+      <button type="submit"
+        style="padding:9px 18px;border:none;border-radius:8px;background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;font-weight:600;font-size:.9rem;cursor:pointer;">
+        Login
+      </button>
+    </form>
+  </div>
+  {% else %}
   <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:24px 32px;margin-top:8px;">
     <script async src="https://telegram.org/js/telegram-widget.js?22"
       data-telegram-login="{{ TELEGRAM_BOT_NAME }}"
@@ -165,6 +457,7 @@
       data-auth-url="{{ TELEGRAM_AUTH_PATH }}"
       data-request-access="write"></script>
   </div>
+  {% endif %}
 </div>
 
 {% endif %}

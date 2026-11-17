@@ -17,6 +17,10 @@ class ParticipantForm(forms.ModelForm):
 class TeamForm(forms.ModelForm):
     name = forms.CharField(label="Team name")
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['organization'].queryset = Organization.objects.order_by('name')
+
     class Meta:
         model = Team
         fields = ('name', 'organization', 'is_onsite', 'is_school_team', 'is_women_team',)
