@@ -191,6 +191,10 @@ def archive_standings_view(request):
     })
 
 
+def contest_view(request):
+    return render(request, 'contest.html')
+
+
 def icpc26_results_view(request):
     teams = [
         {"rank": 1,   "old_rank": 1,   "name": "Master ka4ka",          "members": "Perdebay, Syrgabayev, Torekeldi",          "solved": 7, "penalty": "07:58:44"},

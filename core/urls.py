@@ -14,6 +14,7 @@ from .views import (
     icpc26_results_view,
     halloffame_view,
     archive_standings_view,
+    contest_view,
 )
 
 from .admin_views import export_teams_on_site, export_teams_off_site, upload_csv
@@ -33,6 +34,7 @@ urlpatterns = [
     path('icpc26-results', icpc26_results_view, name='icpc26-results'),
     path('hall-of-fame', halloffame_view, name='halloffame'),
     path('archive', archive_standings_view, name='archive'),
+    path('contest', contest_view, name='contest'),
 ]
 
 urlpatterns += [
