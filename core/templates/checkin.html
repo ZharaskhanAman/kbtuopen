@@ -1,0 +1,217 @@
+{% load tz %}<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+  <title>Check-in · KBTU OPEN</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #f1f5f9; --card: #fff; --border: #e2e8f0; --text: #0f172a; --muted: #64748b;
+      --accent: #2563eb; --ok: #16a34a; --ok-bg: #dcfce7; --radius: 12px;
+    }
+    body {
+      background: var(--bg); color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      font-size: 16px; line-height: 1.4; padding-bottom: 40px;
+    }
+    header {
+      position: sticky; top: 0; z-index: 10; background: var(--card);
+      border-bottom: 1px solid var(--border); padding: 12px 14px 10px;
+    }
+    .head-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+    .title { font-weight: 800; font-size: 1.05rem; }
+    .counters { display: flex; gap: 14px; text-align: right; }
+    .counter { font-weight: 700; color: var(--ok); font-size: 1rem; font-variant-numeric: tabular-nums; line-height: 1.2; }
+    .counter span { color: var(--muted); font-weight: 600; }
+    .counter small { display: block; color: var(--muted); font-size: .65rem; font-weight: 600; text-transform: uppercase; letter-spacing: .05em; }
+    #search {
+      width: 100%; padding: 11px 14px; font-size: 16px; border: 1px solid var(--border);
+      border-radius: 10px; background: var(--bg); outline: none;
+    }
+    #search:focus { border-color: var(--accent); background: #fff; }
+    .tabs { display: flex; gap: 6px; margin-top: 10px; }
+    .tab {
+      flex: 1; padding: 8px 4px; border: 1px solid var(--border); border-radius: 8px;
+      background: var(--card); color: var(--muted); font-size: .85rem; font-weight: 600;
+    }
+    .tab.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+    main { padding: 12px; display: flex; flex-direction: column; gap: 10px; }
+    .team {
+      background: var(--card); border: 1px solid var(--border); border-radius: var(--radius);
+      padding: 14px; display: flex; gap: 12px; align-items: center;
+    }
+    .team.arrived { border-color: #86efac; background: #f0fdf4; }
+    .info { flex: 1; min-width: 0; }
+    .name { font-weight: 700; font-size: 1rem; word-break: break-word; }
+    .meta { color: var(--muted); font-size: .8rem; margin-top: 2px; word-break: break-word; }
+    .members { font-size: .85rem; margin-top: 6px; }
+    .tags { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 6px; }
+    .tag {
+      font-size: .7rem; font-weight: 600; padding: 2px 8px; border-radius: 100px;
+      background: var(--bg); color: var(--muted); border: 1px solid var(--border);
+    }
+    .tag.warn { background: #fef3c7; color: #b45309; border-color: #fcd34d; }
+    .tag.bad { background: #fee2e2; color: #b91c1c; border-color: #fca5a5; }
+    .btn {
+      flex-shrink: 0; width: 92px; min-height: 64px; border-radius: 10px; border: 2px solid var(--accent);
+      background: #fff; color: var(--accent); font-weight: 700; font-size: .9rem; cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .team.arrived .btn { background: var(--ok); border-color: var(--ok); color: #fff; }
+    .btn:disabled { opacity: .5; }
+    .btn small { display: block; font-weight: 500; font-size: .75rem; margin-top: 2px; }
+    .empty { text-align: center; color: var(--muted); padding: 40px 0; display: none; }
+    .toast {
+      position: fixed; left: 50%; bottom: 20px; transform: translateX(-50%);
+      background: #b91c1c; color: #fff; padding: 10px 16px; border-radius: 10px;
+      font-size: .9rem; display: none; z-index: 20;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="head-row">
+      <div class="title">Check-in</div>
+      <div class="counters">
+        <div class="counter"><small>Команды</small><b id="arrived">{{ arrived_count }}</b> <span>/ {{ teams|length }}</span></div>
+        <div class="counter"><small>Участники</small><b id="arrived-members">{{ arrived_members }}</b> <span>/ {{ total_members }}</span></div>
+      </div>
+    </div>
+    <input id="search" type="search" placeholder="Команда, вуз, участник…" autocomplete="off">
+    <div class="tabs">
+      <button class="tab active" data-filter="all">Все</button>
+      <button class="tab" data-filter="waiting">Не пришли</button>
+      <button class="tab" data-filter="arrived">Пришли</button>
+    </div>
+  </header>
+
+  <main id="list">
+    {% for team in teams %}
+    <div class="team{% if team.arrived_at %} arrived{% endif %}" data-id="{{ team.id }}" data-members="{{ team.num_members }}"
+         data-search="{{ team.name }} {{ team.organization }} {{ team.members.all|join:' ' }} {{ team.seat|default:'' }}">
+      <div class="info">
+        <div class="name">{{ team.name }}</div>
+        <div class="meta">{{ team.organization }} · {{ team.login }}{% if team.seat %} · {{ team.seat }}{% endif %}</div>
+        <div class="members">{{ team.members.all|join:", " }}</div>
+        <div class="tags">
+          {% if team.status == 'pending' %}<span class="tag warn">pending</span>{% elif team.status == 'rejected' %}<span class="tag bad">rejected</span>{% endif %}
+          {% if team.is_school_team %}<span class="tag">school</span>{% endif %}
+          {% if team.is_women_team %}<span class="tag">women</span>{% endif %}
+        </div>
+      </div>
+      <button class="btn" type="button">
+        {% if team.arrived_at %}✓ Пришли<small>{{ team.arrived_at|timezone:"Asia/Almaty"|time:"H:i" }}</small>{% else %}Пришли{% endif %}
+      </button>
+    </div>
+    {% endfor %}
+    <div class="empty" id="empty">Ничего не найдено</div>
+  </main>
+
+  <div class="toast" id="toast"></div>
+
+  <script>
+    (function () {
+      const CSRF = "{{ csrf_token }}";
+      const TOGGLE_URL = "{% url 'checkin_toggle' 0 %}";
+      const cards = Array.from(document.querySelectorAll('.team'));
+      const searchInput = document.getElementById('search');
+      const counter = document.getElementById('arrived');
+      const memberCounter = document.getElementById('arrived-members');
+      const empty = document.getElementById('empty');
+      const toast = document.getElementById('toast');
+      let filter = 'all';
+
+      function toggleUrl(id) { return TOGGLE_URL.replace('/0/', '/' + id + '/'); }
+
+      function formatTime(iso) {
+        return new Date(iso).toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit', timeZone: 'Asia/Almaty' });
+      }
+
+      function showError(message) {
+        toast.textContent = message;
+        toast.style.display = 'block';
+        setTimeout(function () { toast.style.display = 'none'; }, 3000);
+      }
+
+      function normalize(text) {
+        return text.toLowerCase().replace(/ё/g, 'е').replace(/\s+/g, ' ').trim();
+      }
+
+      // Built once from data-search (name, org, members, seat). Login is left out on
+      // purpose: every login starts with "kbtu…", which would make "kbtu" match all teams.
+      const haystacks = new Map(cards.map(function (card) {
+        return [card, normalize(card.dataset.search)];
+      }));
+
+      function render() {
+        const words = normalize(searchInput.value).split(' ').filter(Boolean);
+        let visible = 0;
+        cards.forEach(function (card) {
+          const arrived = card.classList.contains('arrived');
+          const matchesFilter = filter === 'all' || (filter === 'arrived') === arrived;
+          const haystack = haystacks.get(card);
+          const matchesQuery = words.every(function (word) { return haystack.includes(word); });
+          const show = matchesFilter && matchesQuery;
+          card.style.display = show ? '' : 'none';
+          if (show) visible++;
+        });
+        empty.style.display = visible === 0 ? 'block' : 'none';
+        const arrivedCards = cards.filter(function (c) { return c.classList.contains('arrived'); });
+        counter.textContent = arrivedCards.length;
+        memberCounter.textContent = arrivedCards.reduce(function (sum, c) { return sum + Number(c.dataset.members); }, 0);
+      }
+
+      function setButton(btn, arrived, iso) {
+        btn.innerHTML = '';
+        btn.append(arrived ? '✓ Пришли' : 'Пришли');
+        if (arrived && iso) {
+          const small = document.createElement('small');
+          small.textContent = formatTime(iso);
+          btn.append(small);
+        }
+      }
+
+      async function toggle(card) {
+        const btn = card.querySelector('.btn');
+        const name = card.querySelector('.name').textContent;
+        if (card.classList.contains('arrived') && !confirm('Снять отметку с «' + name + '»?')) return;
+
+        btn.disabled = true;
+        try {
+          const response = await fetch(toggleUrl(card.dataset.id), {
+            method: 'POST',
+            headers: { 'X-CSRFToken': CSRF },
+            credentials: 'same-origin',
+          });
+          if (response.status === 403) { window.location.reload(); return; }
+          if (!response.ok) throw new Error('HTTP ' + response.status);
+          const data = await response.json();
+          card.classList.toggle('arrived', data.arrived);
+          setButton(btn, data.arrived, data.arrived_at);
+          render();
+        } catch (error) {
+          showError('Не удалось сохранить. Проверьте интернет или войдите заново.');
+        } finally {
+          btn.disabled = false;
+        }
+      }
+
+      cards.forEach(function (card) {
+        card.querySelector('.btn').addEventListener('click', function () { toggle(card); });
+      });
+
+      searchInput.addEventListener('input', render);
+
+      document.querySelectorAll('.tab').forEach(function (tab) {
+        tab.addEventListener('click', function () {
+          document.querySelectorAll('.tab').forEach(function (t) { t.classList.remove('active'); });
+          tab.classList.add('active');
+          filter = tab.dataset.filter;
+          render();
+        });
+      });
+    })();
+  </script>
+</body>
+</html>

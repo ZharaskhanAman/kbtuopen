@@ -2,7 +2,7 @@ import logging
 
 from django.contrib import admin
 from django.db import models
-from core.models import Organization, Team, Participant, ContestSettings
+from core.models import Organization, Team, Participant, ContestSettings, Room
 from django.http import HttpResponse
 
 logger = logging.getLogger(__name__)
@@ -98,6 +98,7 @@ class TeamAdmin(admin.ModelAdmin):
         'password_sent_at',
         'seat',
         'member_count',
+        'arrived_at',
     )
 
     list_filter = [
@@ -107,6 +108,7 @@ class TeamAdmin(admin.ModelAdmin):
         MembersCountFilter,
         "password_sent_at",
         "is_synced_with_dmoj",
+        "arrived_at",
     ]
 
     autocomplete_fields = ['organization']
@@ -133,6 +135,7 @@ class TeamAdmin(admin.ModelAdmin):
 @admin.register(Participant)
 class ParticipantAdmin(admin.ModelAdmin):
     list_display = ('team', 'full_name', 'tshirt_size',)
+    search_fields = ['full_name', 'team__name']
 
 
 @admin.register(ContestSettings)
@@ -142,3 +145,10 @@ class ContestSettingsAdmin(admin.ModelAdmin):
 
     def has_delete_permission(self, request, obj=None):
         return False
+
+
+@admin.register(Room)
+class RoomAdmin(admin.ModelAdmin):
+    list_display = ('number', 'capacity', 'computers', 'is_active', 'is_lecture', 'only_organization', 'note')
+    list_editable = ('capacity', 'is_active', 'is_lecture', 'only_organization', 'note')
+    list_filter = ('is_active', 'is_lecture')

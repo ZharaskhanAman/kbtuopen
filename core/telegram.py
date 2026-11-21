@@ -2,40 +2,64 @@ from django.conf import settings
 from django.urls import reverse
 from urllib import request, parse
 from kbtuopen.settings import TELEGRAM_BOT_TOKEN
+from core.seating import org_tokens
+from core.seating_csv import parse_label
 import os
 
 telegram_link = f"https://api.telegram.org/bot{TELEGRAM_BOT_TOKEN}"
 
 
-message_invite = """
-Hi!
+CONTEST_LINK = "http://kbtuopen26.contest.codeforces.com/"
+LAPTOP_UNIVERSITIES = {"kbtu", "кбту"}
 
-Login: {login}
-Password: {password}
-
-{seat}
-
-Contest link: http://kbtuopen26.contest.codeforces.com/
-"""
+LAPTOP_NOTICE = (
+    "KBTU students: please bring your own laptop.\n"
+    "Студенты КБТУ: пожалуйста, возьмите с собой ноутбук."
+)
 
 
-def send_message(chat_id, login, password, seat):
-    if seat:
-        seat = "Seating: " + seat
-    else:
-        seat = ""
-
-    text = message_invite.format(login=login, password=password, seat=seat)
+def needs_laptop(organization):
+    return bool(org_tokens(organization) & LAPTOP_UNIVERSITIES)
 
 
+def seating_lines(seat):
+    if not seat:
+        return []
+    parsed = parse_label(seat)
+    if parsed is None:
+        return [f"Seat: {seat}"]
+    room, position = parsed
+    return [f"Room: {room}", f"Seat: {position}"]
 
+
+def build_credentials_message(login, seat, organization):
+    """Message for onsite teams: login and seat. The password is intentionally
+    not sent; onsite teams get it at the venue / on their team page."""
+    blocks = [
+        "Hi!",
+        f"Login: {login}",
+        "\n".join(seating_lines(seat)),
+        LAPTOP_NOTICE if needs_laptop(organization) else "",
+        f"Contest link: {CONTEST_LINK}",
+    ]
+    return "\n\n".join(block for block in blocks if block)
+
+
+def build_online_message(login, password):
+    """Online teams have no seat and need the password to log in remotely."""
+    return "\n\n".join([
+        "Hi!",
+        f"Login: {login}\nPassword: {password}",
+        f"Contest link: {CONTEST_LINK}",
+    ])
+
+
+def send_message(chat_id, text):
     params = {
         'chat_id': chat_id,
         'text': text,
     }
-    
     httpreq = request.Request(url=f"{telegram_link}/sendMessage?{parse.urlencode(params, doseq=True, safe='/')}", method="GET")
-    
 
     with request.urlopen(httpreq) as httpresponse:
         status = httpresponse.status
@@ -44,6 +68,7 @@ def send_message(chat_id, login, password, seat):
         )
 
     return (status, response)
+
 
 def get_port(request):
     if 'SERVER_PORT' in request.META:

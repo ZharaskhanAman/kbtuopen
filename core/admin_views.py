@@ -67,6 +67,12 @@ def download_teams_csv(teams: QuerySet, filename):
     return response
 
 
+def team_id_from_login(login):
+    """'<prefix><id>' -> id; the prefix may itself contain dashes."""
+    tail = login.strip().rsplit("-", 1)[-1]
+    return int(tail) if tail.isdigit() else None
+
+
 def upload_csv(request):
     if not request.user.is_authenticated or not (request.user.is_staff or request.user.is_superuser):
         raise PermissionDenied()
@@ -79,7 +85,7 @@ def upload_csv(request):
             teams_to_update = []
             for row in reader:
                 try:
-                    team = Team.objects.get(pk=int(row['Login'].split('-')[1]))
+                    team = Team.objects.get(pk=team_id_from_login(row['Login']))
                     team.is_onsite = row['Is Onsite'].lower() in ['true', '1', 't']
                     status = row.get('Status')
                     if status is not None:

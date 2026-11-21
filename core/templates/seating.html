@@ -1,0 +1,122 @@
+{% extends "admin/base_site.html" %}
+
+{% block title %}Рассадка по кабинетам{% endblock %}
+
+{% block extrastyle %}
+<style>
+  .seating-summary { display: flex; gap: 24px; flex-wrap: wrap; margin: 12px 0 20px; }
+  .seating-summary div { font-size: 14px; }
+  .seating-summary b { font-size: 20px; display: block; }
+  .seating-ok { color: #16a34a; }
+  .seating-bad { color: #b91c1c; }
+  .seating-room { margin-bottom: 28px; }
+  .seating-room h2 { margin-bottom: 6px; }
+  .seating-room table { width: 100%; }
+  .seat-changed { font-weight: 600; }
+  .arrived-yes { color: #16a34a; font-weight: 700; font-size: 16px; }
+  .arrived-no { color: #aaa; }
+  .seat-old { color: #888; text-decoration: line-through; margin-right: 6px; }
+  .seating-csv { border: 1px solid var(--hairline-color, #ddd); border-radius: 6px; padding: 12px 16px; margin: 0 0 20px; }
+  .seating-csv h3 { margin: 0 0 8px; }
+  .seating-csv form { display: inline-flex; gap: 8px; align-items: center; margin-top: 8px; }
+  .seating-distribute { border: 2px solid var(--primary, #79aec8); border-radius: 6px; padding: 12px 16px; margin: 0 0 20px; }
+
+</style>
+{% endblock %}
+
+{% block content %}
+<h1>Рассадка по кабинетам</h1>
+<p>
+  {% if preview %}
+    <b>Предпросмотр</b> — так рассадит кнопка «Распределить и сохранить». В базу ещё ничего не записано.
+    <a href="{% url 'seating' %}">← Сохранённая рассадка</a>
+  {% else %}
+    <b>Сохранённая рассадка</b> — места, которые сейчас записаны у команд.
+    <a href="{% url 'seating' %}?preview=1">Показать предпросмотр →</a>
+  {% endif %}
+</p>
+<p class="help">
+  Команды одного вуза не сидят на соседних местах, крупные вузы разнесены по кабинетам.
+  Учитываются оффлайн-команды с участниками, кроме rejected.
+  Кабинеты и вместимость — в <a href="{% url 'admin:core_room_changelist' %}">Rooms</a>.
+</p>
+
+<div class="seating-csv">
+  <h3>Ручная правка через CSV</h3>
+  <a class="button" href="{% url 'seating_export' %}">Скачать план</a>
+  <a class="button" href="{% url 'seating_export' %}?source=saved">Скачать текущие места</a>
+  <br>
+  <form method="post" action="{% url 'seating_import' %}" enctype="multipart/form-data"
+        onsubmit="return confirm('Записать места из файла? Команды, которых нет в файле, не изменятся.');">
+    {% csrf_token %}
+    <input type="file" name="csv_file" accept=".csv,text/csv" required>
+    <input type="submit" value="Загрузить CSV">
+  </form>
+  <p class="help">Меняйте только колонки Room и Seat; команды узнаются по Login. Пустые Room и Seat — строка пропускается.
+    Если в файле есть ошибка, не сохраняется ничего.</p>
+</div>
+
+<form method="post" class="seating-distribute"
+      onsubmit="return confirm('Перезаписать места у всех рассаживаемых команд?');">
+  {% csrf_token %}
+  <input type="submit" class="default" value="Распределить и сохранить">
+  <p class="help">
+    Рассаживает всех и сохраняет места. Сильные команды (★, список в core/strong_teams.py)
+    не садятся в лекционные залы — отметка «лекционный» в Rooms.
+  </p>
+</form>
+
+{% if error %}
+  <p class="errornote">{{ error }}</p>
+{% elif not preview and not groups %}
+  <p class="warning">Места ещё не распределены. Нажмите «Распределить и сохранить».</p>
+{% else %}
+  {% if missing_strong %}<p class="warning">{{ missing_strong }}</p>{% endif %}
+  <div class="seating-summary">
+    <div><b>{{ team_count }}</b>команд</div>
+    <div><b class="seating-ok">{{ arrived_count }}</b>пришли (check-in)</div>
+    {% if not preview %}<div><b class="{% if unseated %}seating-bad{% endif %}">Без места: {{ unseated }}</b>команд</div>{% endif %}
+    <div><b>{{ people_count }}</b>человек</div>
+    <div><b>{{ strong_count }}</b>сильных ★ (не в лекционных)</div>
+    <div><b>{{ capacity }}</b>мест в {{ rooms|length }} кабинетах</div>
+    <div>
+      <b class="{% if conflicts %}seating-bad{% else %}seating-ok{% endif %}">{{ conflicts }}</b>
+      соседей из одного вуза{% if dedicated %} (без кабинетов только для одного вуза){% endif %}
+    </div>
+  </div>
+
+
+  {% for group in groups %}
+  <div class="seating-room">
+    <h2>Room {{ group.room.number }} · {{ group.rows|length }} / {{ group.room.capacity }} команд · {{ group.people }} чел. · пришли {{ group.arrived }} · {% if group.room.computers %}{{ group.room.computers }}{% else %}?{% endif %} комп.{% if group.room.is_lecture %} · лекционный{% endif %}{% if group.room.only_organization %} · только {{ group.room.only_organization }}{% endif %}</h2>
+    <table>
+      <thead>
+        <tr><th>Место</th><th>Пришли</th><th>Команда</th><th>Чел.</th><th>Вуз</th><th>Статус</th>{% if preview %}<th>Сейчас → станет</th>{% endif %}</tr>
+      </thead>
+      <tbody>
+        {% for row in group.rows %}
+        <tr>
+          <td>{{ row.assignment.position }}</td>
+          <td>{% if row.team.arrived_at %}<span class="arrived-yes" title="{{ row.team.arrived_at }}">✓</span>{% else %}<span class="arrived-no">—</span>{% endif %}</td>
+          <td>{% if row.assignment.team.strong %}★ {% endif %}<a href="{% url 'admin:core_team_change' row.team.id %}">{{ row.team.name }}</a></td>
+          <td>{{ row.team.num_members }}</td>
+          <td>{{ row.team.organization }}</td>
+          <td>{{ row.team.status }}</td>
+          {% if preview %}
+          <td>
+            {% if row.team.seat == row.assignment.label %}
+              {{ row.assignment.label }}
+            {% else %}
+              {% if row.team.seat %}<span class="seat-old">{{ row.team.seat }}</span>{% endif %}
+              <span class="seat-changed">{{ row.assignment.label }}</span>
+            {% endif %}
+          </td>
+          {% endif %}
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% endfor %}
+{% endif %}
+{% endblock %}
