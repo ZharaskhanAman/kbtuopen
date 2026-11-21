@@ -111,6 +111,8 @@ class TeamAdmin(admin.ModelAdmin):
 
     autocomplete_fields = ['organization']
 
+    inlines = [ParticipantInline]
+
     search_fields = ['name', 'organization__name', 'owner__username']
 
     actions = [
