@@ -1,6 +1,6 @@
 import logging
 
-from django.contrib import admin
+from django.contrib import admin, messages
 from django.db import models
 from core.models import Organization, Team, Participant, ContestSettings, Room
 from django.http import HttpResponse
@@ -40,15 +40,19 @@ def reject_teams(modeladmin, request, queryset):
     Team.objects.bulk_update(queryset, ["status"])
 
 
+@admin.action(description="Export for Codeforces (onsite: contest id, online: id + o)")
 def export_as_codeforces_format(modeladmin, request, queryset):
-    response = HttpResponse(content_type="text/plain;charset=utf-8")
+    contest_id = ContestSettings.load().codeforces_contest_id.strip()
+    if not contest_id:
+        modeladmin.message_user(
+            request, "Укажите Codeforces contest id в Contest settings.", level=messages.ERROR
+        )
+        return None
 
-    text = ""
-    for team in queryset:
-        if team.members.count() > 0:
-            text += team.generate_cf_format() + "\n"
-
-    response.write(text)
+    teams = queryset.select_related("organization").prefetch_related("members").order_by("id")
+    lines = [team.generate_cf_format(contest_id) for team in teams if team.members.all()]
+    response = HttpResponse("\n".join(lines) + "\n", content_type="text/plain; charset=utf-8")
+    response["Content-Disposition"] = 'attachment; filename="codeforces.txt"'
     return response
 
 

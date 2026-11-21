@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from .codeforces import clean_team_name, online_contest_id
 from .telegram import build_credentials_message, build_online_message, send_message
 from django.core.cache import cache
 from django.utils import timezone
@@ -63,16 +64,17 @@ class Team(models.Model):
     def login(self):
         return f"{ContestSettings.login_prefix()}{self.id}"
 
-    def generate_cf_format(self):
+    def generate_cf_format(self, contest_id):
+        """Onsite teams go to contest_id, online teams to contest_id + 'o'."""
         members = ",".join(str(member) for member in self.members.all())
-        name = self.name
+        name = clean_team_name(self.name, fallback=f"Team {self.id}")
         if self.is_women_team:
             name += "[W]"
         if self.is_school_team:
             name += "[S]"
-        team_name = f"{self.organization}: {name} - {members}"
-
-        return f"CONTEST_ID| {self.login} | {self.password} | {team_name}"
+        team_name = clean_team_name(f"{self.organization}: {name} - {members}")
+        contest = contest_id if self.is_onsite else online_contest_id(contest_id)
+        return f"{contest}| {self.login} | {self.password} | {team_name}"
 
     def send_credentials_by_telegram(self):
         text = (
@@ -133,6 +135,14 @@ class ContestSettings(models.Model):
         default=DEFAULT_LOGIN_PREFIX,
         help_text="Логин команды = префикс + id, например kbtuspring26-123. "
         "Меняйте до рассылки логинов: уже выданные логины изменятся.",
+    )
+
+    codeforces_contest_id = models.CharField(
+        "Codeforces contest id",
+        max_length=20,
+        blank=True,
+        default="",
+        help_text="Для экспорта в Codeforces: оффлайн-команды получают этот id, онлайн — id + «o».",
     )
 
     def save(self, *args, **kwargs):
