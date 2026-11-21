@@ -77,10 +77,11 @@ class Team(models.Model):
         return f"{contest}| {self.login} | {self.password} | {team_name}"
 
     def send_credentials_by_telegram(self):
+        contest_link = ContestSettings.load().contest_url
         text = (
-            build_credentials_message(self.login, self.seat, self.organization.name)
+            build_credentials_message(self.login, self.seat, self.organization.name, contest_link)
             if self.is_onsite
-            else build_online_message(self.login, self.password)
+            else build_online_message(self.login, self.password, contest_link)
         )
         (status, response) = send_message(self.owner.username, text)
 
@@ -143,6 +144,18 @@ class ContestSettings(models.Model):
         blank=True,
         default="",
         help_text="Для экспорта в Codeforces: оффлайн-команды получают этот id, онлайн — id + «o».",
+    )
+
+    contest_url = models.URLField(
+        default="https://kbtuopen26.contest.codeforces.com/",
+        help_text="Ссылка на контест: в Telegram-сообщениях и в PDF с паролями.",
+    )
+    print_title = models.CharField(
+        "title for printouts", max_length=100, default="KBTU Open Fall 2026",
+        help_text="Название соревнования в PDF (пароли, таблички).",
+    )
+    print_place_date = models.CharField(
+        "place and date for printouts", max_length=100, default="Almaty, KBTU, November 22, 2026",
     )
 
     def save(self, *args, **kwargs):

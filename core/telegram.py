@@ -9,7 +9,7 @@ import os
 telegram_link = f"https://api.telegram.org/bot{TELEGRAM_BOT_TOKEN}"
 
 
-CONTEST_LINK = "http://kbtuopen26.contest.codeforces.com/"
+DEFAULT_CONTEST_LINK = "https://kbtuopen26.contest.codeforces.com/"  # real value: ContestSettings.contest_url
 LAPTOP_UNIVERSITIES = {"kbtu", "кбту"}
 
 LAPTOP_NOTICE = (
@@ -32,7 +32,7 @@ def seating_lines(seat):
     return [f"Room: {room}", f"Seat: {position}"]
 
 
-def build_credentials_message(login, seat, organization):
+def build_credentials_message(login, seat, organization, contest_link=DEFAULT_CONTEST_LINK):
     """Message for onsite teams: login and seat. The password is intentionally
     not sent; onsite teams get it at the venue / on their team page."""
     blocks = [
@@ -40,17 +40,17 @@ def build_credentials_message(login, seat, organization):
         f"Login: {login}",
         "\n".join(seating_lines(seat)),
         LAPTOP_NOTICE if needs_laptop(organization) else "",
-        f"Contest link: {CONTEST_LINK}",
+        f"Contest link: {contest_link}",
     ]
     return "\n\n".join(block for block in blocks if block)
 
 
-def build_online_message(login, password):
+def build_online_message(login, password, contest_link=DEFAULT_CONTEST_LINK):
     """Online teams have no seat and need the password to log in remotely."""
     return "\n\n".join([
         "Hi!",
         f"Login: {login}\nPassword: {password}",
-        f"Contest link: {CONTEST_LINK}",
+        f"Contest link: {contest_link}",
     ])
 
 
