@@ -152,7 +152,7 @@ class ContestSettings(models.Model):
     )
     print_title = models.CharField(
         "title for printouts", max_length=100, default="KBTU Open Fall 2026",
-        help_text="Название соревнования в PDF (пароли, таблички).",
+        help_text="Название соревнования в PDF (пароли, карточки команд).",
     )
     print_place_date = models.CharField(
         "place and date for printouts", max_length=100, default="Almaty, KBTU, November 22, 2026",
@@ -162,6 +162,13 @@ class ContestSettings(models.Model):
         self.pk = 1
         super().save(*args, **kwargs)
         cache.delete(LOGIN_PREFIX_CACHE_KEY)
+
+    class Meta:
+        verbose_name = "contest settings"
+        verbose_name_plural = "contest settings"
+
+    def __str__(self):
+        return "Настройки соревнования"
 
     @classmethod
     def load(cls):

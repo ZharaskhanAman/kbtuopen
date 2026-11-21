@@ -4,6 +4,8 @@ from django.contrib import admin, messages
 from django.db import models
 from core.models import Organization, Team, Participant, ContestSettings, Room
 from django.http import HttpResponse
+from django.shortcuts import redirect
+from django.urls import reverse
 
 logger = logging.getLogger(__name__)
 
@@ -144,8 +146,20 @@ class ParticipantAdmin(admin.ModelAdmin):
 
 @admin.register(ContestSettings)
 class ContestSettingsAdmin(admin.ModelAdmin):
+    """Singleton: the list page jumps straight to the one settings form."""
+
+    fieldsets = (
+        ("Регистрация и check-in", {"fields": ("is_registration_open", "checkin_pin")}),
+        ("Логины и Codeforces", {"fields": ("login_prefix_value", "codeforces_contest_id")}),
+        ("Печать и Telegram", {"fields": ("contest_url", "print_title", "print_place_date")}),
+    )
+
+    def changelist_view(self, request, extra_context=None):
+        settings = ContestSettings.load()
+        return redirect(reverse("admin:core_contestsettings_change", args=[settings.pk]))
+
     def has_add_permission(self, request):
-        return not ContestSettings.objects.exists()
+        return False
 
     def has_delete_permission(self, request, obj=None):
         return False

@@ -1,27 +1,34 @@
 {% extends "admin/change_list.html" %}
 {% load i18n %}
 
-{% block object-tools-items %}
+{% block extrastyle %}
 {{ block.super }}
-<li>
-  <a href="{% url 'export-teams-onsite' %}" class="button">Скачать on-site команды</a>
-</li>
-<li>
-  <a href="{% url 'export-teams-offsite' %}" class="button">Скачать off-site команды</a>
-</li>
-<li>
-  <a href="{% url 'upload-csv' %}" class="button">Загрузить csv</a>
-</li>
-<li>
-  <a href="{% url 'seating' %}" class="button">Рассадка</a>
-</li>
-<li>
-  <a href="{% url 'print_passwords' %}" class="button">PDF: пароли</a>
-</li>
-<li>
-  <a href="{% url 'print_team_cards' %}" class="button">PDF: карточки команд</a>
-</li>
-<li>
-  <a href="{% url 'checkin' %}" class="button">Check-in (оффлайн)</a>
-</li>
+<style>
+  .team-tools { display: flex; flex-wrap: wrap; gap: 8px 24px; margin: 4px 0 16px; clear: both; }
+  .team-tools-group { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; }
+  .team-tools-label { font-size: 11px; font-weight: 600; text-transform: uppercase; color: var(--body-quiet-color, #666); margin-right: 2px; }
+  .team-tools a.button { display: inline-block; padding: 6px 12px; font-size: 12px; border-radius: 15px; }
+</style>
+{% endblock %}
+
+{% block content_title %}
+{{ block.super }}
+<div class="team-tools">
+  <div class="team-tools-group">
+    <span class="team-tools-label">Соревнование</span>
+    <a href="{% url 'seating' %}" class="button">Рассадка</a>
+    <a href="{% url 'checkin' %}" class="button">Check-in (оффлайн)</a>
+  </div>
+  <div class="team-tools-group">
+    <span class="team-tools-label">Печать</span>
+    <a href="{% url 'print_passwords' %}" class="button">PDF: пароли</a>
+    <a href="{% url 'print_team_cards' %}" class="button">PDF: карточки команд</a>
+  </div>
+  <div class="team-tools-group">
+    <span class="team-tools-label">Экспорт / импорт</span>
+    <a href="{% url 'export-teams-onsite' %}" class="button">Скачать on-site команды</a>
+    <a href="{% url 'export-teams-offsite' %}" class="button">Скачать off-site команды</a>
+    <a href="{% url 'upload-csv' %}" class="button">Загрузить csv</a>
+  </div>
+</div>
 {% endblock %}
