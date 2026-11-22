@@ -55,6 +55,7 @@ def export_as_codeforces_format(modeladmin, request, queryset):
     lines = [team.generate_cf_format(contest_id) for team in teams if team.members.all()]
     response = HttpResponse("\n".join(lines) + "\n", content_type="text/plain; charset=utf-8")
     response["Content-Disposition"] = 'attachment; filename="codeforces.txt"'
+    response["Cache-Control"] = "private, no-store, max-age=0"  # contains passwords
     return response
 
 

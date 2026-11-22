@@ -27,6 +27,8 @@ def teams_in_seat_order():
 def pdf_response(content, filename):
     response = HttpResponse(content, content_type="application/pdf")
     response["Content-Disposition"] = f'attachment; filename="{filename}"'
+    # Contains passwords: never let a CDN or browser cache keep a copy.
+    response["Cache-Control"] = "private, no-store, max-age=0"
     return response
 
 

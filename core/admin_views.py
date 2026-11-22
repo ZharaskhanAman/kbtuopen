@@ -30,6 +30,7 @@ def export_teams_off_site(request):
 def download_teams_csv(teams: QuerySet, filename):
     response = HttpResponse(content_type='text/csv; charset=utf-8-sig')
     response['Content-Disposition'] = f'attachment; filename="{filename}"'
+    response['Cache-Control'] = 'private, no-store, max-age=0'  # contains passwords
     writer = csv.writer(response, delimiter=';')
     writer.writerow(
         [

@@ -28,6 +28,7 @@ MAX_UPLOAD_BYTES = 1024 * 1024
 def csv_response(text, filename):
     response = HttpResponse("﻿" + text, content_type="text/csv; charset=utf-8")
     response["Content-Disposition"] = f'attachment; filename="{filename}"'
+    response["Cache-Control"] = "private, no-store, max-age=0"
     return response
 
 

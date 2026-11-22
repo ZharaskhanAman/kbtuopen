@@ -50,6 +50,7 @@ urlpatterns += [
     path("seating", seating_view, name='seating'),
     path("seating/export", seating_export, name='seating_export'),
     path("seating/import", seating_import, name='seating_import'),
-    path("print/passwords.pdf", print_passwords, name='print_passwords'),
-    path("print/team-cards.pdf", print_team_cards, name='print_team_cards'),
+    # No ".pdf" in the path: Cloudflare caches by file extension, and these are private.
+    path("print/passwords", print_passwords, name='print_passwords'),
+    path("print/team-cards", print_team_cards, name='print_team_cards'),
 ]

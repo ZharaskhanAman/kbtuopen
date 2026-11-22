@@ -18,9 +18,11 @@
       <div class="info-row" style="border-bottom:1px solid rgba(34,197,94,.15);">
         <span class="info-label">Login</span><span class="info-val">{{ team.login }}</span>
       </div>
+      {% if not team.is_onsite %}
       <div class="info-row" style="border-bottom:1px solid rgba(34,197,94,.15);">
         <span class="info-label">Password</span><span class="info-val">{{ team.password }}</span>
       </div>
+      {% endif %}
       {% if team.is_onsite %}
       <div class="info-row" style="border-bottom:none;">
         <span class="info-label">Seat</span><span class="info-val">{{ team.seat }}</span>

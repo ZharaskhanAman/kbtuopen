@@ -92,6 +92,9 @@ class PrintViewsTests(TestCase):
         response = self.client.get(reverse("print_passwords"))
         self.assertEqual(response["Content-Type"], "application/pdf")
         self.assertIn('filename="passwords.pdf"', response["Content-Disposition"])
+        self.assertIn("no-store", response["Cache-Control"])
+        self.assertIn("private", response["Cache-Control"])
+        self.assertFalse(reverse("print_passwords").endswith(".pdf"))
         self.assertEqual(page_count(response.content), 1)  # 4 eligible teams -> one page
 
     def test_team_cards_one_page_per_eligible_team(self):
